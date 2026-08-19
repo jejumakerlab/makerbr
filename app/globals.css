@@ -1,0 +1,190 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-noto-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --font-heading: var(--font-outfit), var(--font-noto-sans), sans-serif;
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-highlight: var(--highlight);
+  --color-highlight-foreground: var(--highlight-foreground);
+  --color-brand-ink: var(--brand-ink);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+/*
+  Maker Bridge brand tokens
+  Primary: Jeju ocean teal (AA contrast on cream)
+  Highlight: hallabong tangerine for CTAs only
+  Surface: warm paper — social-enterprise trust, not tech-startup neon
+*/
+:root {
+  --background: #f6f3ec;
+  --foreground: #1a211f;
+  --card: #fffcf7;
+  --card-foreground: #1a211f;
+  --popover: #fffcf7;
+  --popover-foreground: #1a211f;
+  --primary: #0a5f59;
+  --primary-foreground: #ffffff;
+  --secondary: #e7efe9;
+  --secondary-foreground: #1a211f;
+  --muted: #ece6db;
+  --muted-foreground: #3f4a47;
+  --accent: #efe4d2;
+  --accent-foreground: #1a211f;
+  --highlight: #d36a1e;
+  --highlight-foreground: #1a211f;
+  --brand-ink: #12332f;
+  --destructive: #b42318;
+  --border: #d8d0c3;
+  --input: #d8d0c3;
+  --ring: #0a5f59;
+  --chart-1: #0a5f59;
+  --chart-2: #d36a1e;
+  --chart-3: #3d6b4f;
+  --chart-4: #c4a574;
+  --chart-5: #1a211f;
+  --radius: 0.75rem;
+  --sidebar: #12332f;
+  --sidebar-foreground: #f6f3ec;
+  --sidebar-primary: #7ad4c8;
+  --sidebar-primary-foreground: #12332f;
+  --sidebar-accent: #1c4a45;
+  --sidebar-accent-foreground: #f6f3ec;
+  --sidebar-border: #2a5550;
+  --sidebar-ring: #7ad4c8;
+}
+
+.dark {
+  --background: #101716;
+  --foreground: #f3eee6;
+  --card: #18211f;
+  --card-foreground: #f3eee6;
+  --popover: #18211f;
+  --popover-foreground: #f3eee6;
+  --primary: #7ad4c8;
+  --primary-foreground: #102220;
+  --secondary: #243330;
+  --secondary-foreground: #f3eee6;
+  --muted: #243330;
+  --muted-foreground: #c5cdc9;
+  --accent: #2c3c38;
+  --accent-foreground: #f3eee6;
+  --highlight: #f0a05a;
+  --highlight-foreground: #1a211f;
+  --brand-ink: #d7efe9;
+  --destructive: #f97066;
+  --border: #31413d;
+  --input: #31413d;
+  --ring: #7ad4c8;
+  --chart-1: #7ad4c8;
+  --chart-2: #f0a05a;
+  --chart-3: #8fbf9a;
+  --chart-4: #c4a574;
+  --chart-5: #f3eee6;
+  --sidebar: #0d1413;
+  --sidebar-foreground: #f3eee6;
+  --sidebar-primary: #7ad4c8;
+  --sidebar-primary-foreground: #102220;
+  --sidebar-accent: #1c2a28;
+  --sidebar-accent-foreground: #f3eee6;
+  --sidebar-border: #31413d;
+  --sidebar-ring: #7ad4c8;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  html {
+    @apply font-sans scroll-smooth;
+    text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-size: 1.0625rem;
+    line-height: 1.7;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-heading);
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+    color: var(--brand-ink);
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-ring;
+  }
+
+  ::selection {
+    background: color-mix(in oklab, var(--primary) 22%, white);
+  }
+}
+
+@layer utilities {
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
