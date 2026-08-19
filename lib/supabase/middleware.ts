@@ -5,6 +5,7 @@ import {
   getSupabaseUrl,
   isSupabaseConfigured,
 } from "@/lib/supabase/env";
+import { isStaffRole } from "@/lib/auth/paths";
 
 export async function updateSession(request: NextRequest) {
   const response = NextResponse.next({ request });
@@ -39,15 +40,18 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const isAdminPath = request.nextUrl.pathname.startsWith("/admin");
-  const isLoginPath = request.nextUrl.pathname.startsWith("/admin/login");
+  const pathname = request.nextUrl.pathname;
+  const isAdminPath = pathname.startsWith("/admin");
 
-  if (isAdminPath && !isLoginPath) {
+  if (isAdminPath) {
     if (!user) {
-      const redirectUrl = request.nextUrl.clone();
-      redirectUrl.pathname = "/admin/login";
-      redirectUrl.searchParams.set("next", request.nextUrl.pathname);
-      return NextResponse.redirect(redirectUrl);
+      const loginUrl = request.nextUrl.clone();
+      loginUrl.pathname = "/login";
+      loginUrl.search = "";
+      const redirectPath =
+        pathname.startsWith("/admin/login") ? "/admin" : `${pathname}${request.nextUrl.search}`;
+      loginUrl.searchParams.set("redirect", redirectPath);
+      return NextResponse.redirect(loginUrl);
     }
 
     const { data: profile } = await supabase
@@ -56,25 +60,19 @@ export async function updateSession(request: NextRequest) {
       .eq("id", user.id)
       .maybeSingle();
 
-    if (!profile || !["admin", "staff"].includes(profile.role)) {
-      const redirectUrl = request.nextUrl.clone();
-      redirectUrl.pathname = "/admin/login";
-      redirectUrl.searchParams.set("error", "unauthorized");
-      return NextResponse.redirect(redirectUrl);
+    if (!isStaffRole(profile?.role)) {
+      const homeUrl = request.nextUrl.clone();
+      homeUrl.pathname = "/";
+      homeUrl.search = "";
+      homeUrl.searchParams.set("notice", "admin_required");
+      return NextResponse.redirect(homeUrl);
     }
-  }
 
-  if (isLoginPath && user) {
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("role")
-      .eq("id", user.id)
-      .maybeSingle();
-
-    if (profile && ["admin", "staff"].includes(profile.role)) {
-      const redirectUrl = request.nextUrl.clone();
-      redirectUrl.pathname = "/admin";
-      return NextResponse.redirect(redirectUrl);
+    if (pathname.startsWith("/admin/login")) {
+      const adminUrl = request.nextUrl.clone();
+      adminUrl.pathname = "/admin";
+      adminUrl.search = "";
+      return NextResponse.redirect(adminUrl);
     }
   }
 

@@ -3,21 +3,24 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, ShoppingBag, X } from "lucide-react";
+import { Menu, Shield, ShoppingBag, X } from "lucide-react";
 import { NAV_ITEMS } from "@/lib/constants";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { SiteLogo } from "@/components/layout/site-logo";
+import { LogoutButton } from "@/components/auth/logout-button";
 import { useCart } from "@/components/store/cart-provider";
 import { cn } from "@/lib/utils";
+import { EMPTY_AUTH, type AuthState } from "@/lib/auth/types";
 
-export function SiteHeader() {
+export function SiteHeader({ auth = EMPTY_AUTH }: { auth?: AuthState }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const { count } = useCart();
+  const close = () => setOpen(false);
 
   return (
     <header className="border-border/80 bg-background/90 sticky top-0 z-50 border-b backdrop-blur-md">
-      <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
+      <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between gap-3 px-4 sm:px-6">
         <SiteLogo />
 
         <nav
@@ -47,7 +50,7 @@ export function SiteHeader() {
           })}
         </nav>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1 sm:gap-2">
           <Link
             href="/store/cart"
             className={cn(buttonVariants({ variant: "ghost", size: "icon-xl" }), "relative")}
@@ -61,12 +64,42 @@ export function SiteHeader() {
             ) : null}
           </Link>
 
-          <Link
-            href="/contact"
-            className={cn(buttonVariants({ size: "xl" }), "hidden sm:inline-flex")}
-          >
-            견적 요청
-          </Link>
+          {auth.isStaff ? (
+            <Link
+              href="/admin"
+              className={cn(
+                buttonVariants({ variant: "cta", size: "xl" }),
+                "hidden md:inline-flex",
+              )}
+            >
+              <Shield className="size-4" aria-hidden="true" />
+              관리자 모드
+            </Link>
+          ) : null}
+
+          {auth.user ? (
+            <div className="hidden items-center gap-1 sm:flex">
+              <Link
+                href="/mypage"
+                className={cn(buttonVariants({ variant: "outline", size: "xl" }))}
+              >
+                마이페이지
+              </Link>
+              <LogoutButton />
+            </div>
+          ) : (
+            <div className="hidden items-center gap-1 sm:flex">
+              <Link
+                href="/login"
+                className={cn(buttonVariants({ variant: "outline", size: "xl" }))}
+              >
+                로그인
+              </Link>
+              <Link href="/signup" className={cn(buttonVariants({ size: "xl" }))}>
+                회원가입
+              </Link>
+            </div>
+          )}
 
           <Button
             className="lg:hidden"
@@ -92,12 +125,53 @@ export function SiteHeader() {
               <Link
                 key={item.href}
                 href={item.href}
-                onClick={() => setOpen(false)}
+                onClick={close}
                 className="touch-target text-foreground flex items-center rounded-lg px-3 text-base font-medium"
               >
                 {item.label}
               </Link>
             ))}
+            <div className="mt-2 flex flex-col gap-2 border-t pt-3">
+              {auth.isStaff ? (
+                <Link
+                  href="/admin"
+                  onClick={close}
+                  className={cn(buttonVariants({ variant: "cta", size: "xl" }), "justify-center")}
+                >
+                  <Shield className="size-4" aria-hidden="true" />
+                  관리자 모드
+                </Link>
+              ) : null}
+              {auth.user ? (
+                <>
+                  <Link
+                    href="/mypage"
+                    onClick={close}
+                    className={cn(buttonVariants({ variant: "outline", size: "xl" }), "justify-center")}
+                  >
+                    마이페이지
+                  </Link>
+                  <LogoutButton onLoggedOut={close} />
+                </>
+              ) : (
+                <>
+                  <Link
+                    href="/login"
+                    onClick={close}
+                    className={cn(buttonVariants({ variant: "outline", size: "xl" }), "justify-center")}
+                  >
+                    로그인
+                  </Link>
+                  <Link
+                    href="/signup"
+                    onClick={close}
+                    className={cn(buttonVariants({ size: "xl" }), "justify-center")}
+                  >
+                    회원가입
+                  </Link>
+                </>
+              )}
+            </div>
           </nav>
         </div>
       ) : null}

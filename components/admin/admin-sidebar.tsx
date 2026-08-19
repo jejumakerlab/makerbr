@@ -16,7 +16,7 @@ export function AdminSidebar() {
   async function signOut() {
     const supabase = createClient();
     if (supabase) await supabase.auth.signOut();
-    router.push("/admin/login");
+    router.push("/");
     router.refresh();
   }
 
@@ -55,6 +55,12 @@ export function AdminSidebar() {
         })}
       </nav>
       <div className="border-sidebar-border border-t p-3">
+        <Link
+          href="/"
+          className="hover:bg-sidebar-accent/70 mb-1 flex min-h-11 items-center rounded-lg px-3 text-sm"
+        >
+          사이트로 돌아가기
+        </Link>
         <Button
           variant="ghost"
           className="text-sidebar-foreground w-full justify-start"

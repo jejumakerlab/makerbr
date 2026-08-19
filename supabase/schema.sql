@@ -19,6 +19,7 @@ create table if not exists public.profiles (
   id uuid primary key references auth.users (id) on delete cascade,
   email text,
   full_name text,
+  phone text,
   role text not null default 'user' check (role in ('user', 'staff', 'admin')),
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
@@ -59,13 +60,17 @@ security definer
 set search_path = public
 as $$
 begin
-  insert into public.profiles (id, email, full_name)
+  insert into public.profiles (id, email, full_name, phone)
   values (
     new.id,
     new.email,
-    coalesce(new.raw_user_meta_data ->> 'full_name', '')
+    coalesce(new.raw_user_meta_data ->> 'full_name', ''),
+    coalesce(new.raw_user_meta_data ->> 'phone', null)
   )
-  on conflict (id) do nothing;
+  on conflict (id) do update set
+    email = excluded.email,
+    full_name = coalesce(nullif(excluded.full_name, ''), public.profiles.full_name),
+    phone = coalesce(nullif(excluded.phone, ''), public.profiles.phone);
   return new;
 end;
 $$;
@@ -393,6 +398,10 @@ drop policy if exists "profiles_update_own" on public.profiles;
 create policy "profiles_update_own" on public.profiles
 for update using (id = auth.uid())
 with check (id = auth.uid());
+
+drop policy if exists "profiles_insert_own" on public.profiles;
+create policy "profiles_insert_own" on public.profiles
+for insert with check (id = auth.uid());
 
 drop policy if exists "profiles_staff_all" on public.profiles;
 create policy "profiles_staff_all" on public.profiles
