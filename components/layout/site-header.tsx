@@ -19,8 +19,8 @@ export function SiteHeader({ auth = EMPTY_AUTH }: { auth?: AuthState }) {
   const close = () => setOpen(false);
 
   return (
-    <header className="border-border/80 bg-background/90 sticky top-0 z-50 border-b backdrop-blur-md">
-      <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between gap-3 px-4 sm:px-6">
+    <header className="sticky top-0 z-50 border-b border-slate-200/70 bg-white/70 backdrop-blur-md">
+      <div className="mx-auto flex h-[4.25rem] w-full max-w-6xl items-center justify-between gap-3 px-4 sm:px-6">
         <SiteLogo />
 
         <nav
@@ -38,10 +38,10 @@ export function SiteHeader({ auth = EMPTY_AUTH }: { auth?: AuthState }) {
                 href={item.href}
                 aria-current={current ? "page" : undefined}
                 className={cn(
-                  "touch-target inline-flex items-center rounded-lg px-3 text-sm font-medium transition-colors",
+                  "touch-target inline-flex items-center rounded-full px-3.5 text-[13px] font-medium tracking-tight transition-colors",
                   current
-                    ? "bg-secondary text-foreground"
-                    : "text-muted-foreground hover:bg-muted hover:text-foreground",
+                    ? "bg-[#0f4c3a] text-white"
+                    : "text-slate-500 hover:bg-slate-100 hover:text-[#0f4c3a]",
                 )}
               >
                 {item.label}
@@ -118,7 +118,7 @@ export function SiteHeader({ auth = EMPTY_AUTH }: { auth?: AuthState }) {
       {open ? (
         <div
           id="mobile-nav"
-          className="border-border bg-background border-t px-4 py-3 lg:hidden"
+          className="border-border bg-white/90 border-t px-4 py-3 backdrop-blur-md lg:hidden"
         >
           <nav className="flex flex-col gap-1" aria-label="모바일 메뉴">
             {NAV_ITEMS.map((item) => (

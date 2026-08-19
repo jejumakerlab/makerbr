@@ -12,14 +12,15 @@ export function PageHero({
   className?: string;
 }) {
   return (
-    <section className={cn("border-border/70 border-b bg-[#efe8d8]", className)}>
-      <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
+    <section className={cn("bg-mesh relative overflow-hidden border-b border-slate-200/80", className)}>
+      <div aria-hidden="true" className="bg-dot-grid pointer-events-none absolute inset-0 opacity-60" />
+      <div className="relative mx-auto w-full max-w-6xl px-4 py-14 sm:px-6 sm:py-20">
         {eyebrow ? (
-          <p className="text-primary text-sm font-semibold tracking-[0.16em] uppercase">
+          <p className="text-xs font-semibold tracking-[0.18em] text-emerald-600 uppercase">
             {eyebrow}
           </p>
         ) : null}
-        <h1 className="mt-2 max-w-3xl text-3xl font-semibold tracking-tight sm:text-4xl">
+        <h1 className="mt-3 max-w-3xl text-3xl font-semibold tracking-tight sm:text-5xl">
           {title}
         </h1>
         {description ? (

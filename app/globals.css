@@ -42,6 +42,7 @@
   --color-highlight: var(--highlight);
   --color-highlight-foreground: var(--highlight-foreground);
   --color-brand-ink: var(--brand-ink);
+  --color-emerald: var(--emerald);
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -51,85 +52,81 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-/*
-  Maker Bridge brand tokens
-  Primary: Jeju ocean teal (AA contrast on cream)
-  Highlight: hallabong tangerine for CTAs only
-  Surface: warm paper — social-enterprise trust, not tech-startup neon
-*/
 :root {
-  --background: #f6f3ec;
-  --foreground: #1a211f;
-  --card: #fffcf7;
-  --card-foreground: #1a211f;
-  --popover: #fffcf7;
-  --popover-foreground: #1a211f;
-  --primary: #0a5f59;
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  --card: #ffffff;
+  --card-foreground: #0f172a;
+  --popover: #ffffff;
+  --popover-foreground: #0f172a;
+  --primary: #0f4c3a;
   --primary-foreground: #ffffff;
-  --secondary: #e7efe9;
-  --secondary-foreground: #1a211f;
-  --muted: #ece6db;
-  --muted-foreground: #3f4a47;
-  --accent: #efe4d2;
-  --accent-foreground: #1a211f;
-  --highlight: #d36a1e;
-  --highlight-foreground: #1a211f;
-  --brand-ink: #12332f;
+  --secondary: #ecfdf5;
+  --secondary-foreground: #134e4a;
+  --muted: #f1f5f9;
+  --muted-foreground: #475569;
+  --accent: #d1fae5;
+  --accent-foreground: #0f4c3a;
+  --highlight: #059669;
+  --highlight-foreground: #ffffff;
+  --emerald: #10b981;
+  --brand-ink: #0f4c3a;
   --destructive: #b42318;
-  --border: #d8d0c3;
-  --input: #d8d0c3;
-  --ring: #0a5f59;
-  --chart-1: #0a5f59;
-  --chart-2: #d36a1e;
-  --chart-3: #3d6b4f;
-  --chart-4: #c4a574;
-  --chart-5: #1a211f;
-  --radius: 0.75rem;
-  --sidebar: #12332f;
-  --sidebar-foreground: #f6f3ec;
-  --sidebar-primary: #7ad4c8;
-  --sidebar-primary-foreground: #12332f;
-  --sidebar-accent: #1c4a45;
-  --sidebar-accent-foreground: #f6f3ec;
-  --sidebar-border: #2a5550;
-  --sidebar-ring: #7ad4c8;
+  --border: #e2e8f0;
+  --input: #e2e8f0;
+  --ring: #134e4a;
+  --chart-1: #0f4c3a;
+  --chart-2: #10b981;
+  --chart-3: #134e4a;
+  --chart-4: #64748b;
+  --chart-5: #0f172a;
+  --radius: 1rem;
+  --sidebar: #0f4c3a;
+  --sidebar-foreground: #f8fafc;
+  --sidebar-primary: #34d399;
+  --sidebar-primary-foreground: #0f4c3a;
+  --sidebar-accent: #134e4a;
+  --sidebar-accent-foreground: #f8fafc;
+  --sidebar-border: #1c5c4d;
+  --sidebar-ring: #34d399;
 }
 
 .dark {
-  --background: #101716;
-  --foreground: #f3eee6;
-  --card: #18211f;
-  --card-foreground: #f3eee6;
-  --popover: #18211f;
-  --popover-foreground: #f3eee6;
-  --primary: #7ad4c8;
-  --primary-foreground: #102220;
-  --secondary: #243330;
-  --secondary-foreground: #f3eee6;
-  --muted: #243330;
-  --muted-foreground: #c5cdc9;
-  --accent: #2c3c38;
-  --accent-foreground: #f3eee6;
-  --highlight: #f0a05a;
-  --highlight-foreground: #1a211f;
-  --brand-ink: #d7efe9;
+  --background: #071510;
+  --foreground: #f8fafc;
+  --card: #0f241c;
+  --card-foreground: #f8fafc;
+  --popover: #0f241c;
+  --popover-foreground: #f8fafc;
+  --primary: #34d399;
+  --primary-foreground: #062017;
+  --secondary: #134e4a;
+  --secondary-foreground: #ecfdf5;
+  --muted: #12352c;
+  --muted-foreground: #cbd5e1;
+  --accent: #134e4a;
+  --accent-foreground: #ecfdf5;
+  --highlight: #34d399;
+  --highlight-foreground: #062017;
+  --emerald: #34d399;
+  --brand-ink: #ecfdf5;
   --destructive: #f97066;
-  --border: #31413d;
-  --input: #31413d;
-  --ring: #7ad4c8;
-  --chart-1: #7ad4c8;
-  --chart-2: #f0a05a;
-  --chart-3: #8fbf9a;
-  --chart-4: #c4a574;
-  --chart-5: #f3eee6;
-  --sidebar: #0d1413;
-  --sidebar-foreground: #f3eee6;
-  --sidebar-primary: #7ad4c8;
-  --sidebar-primary-foreground: #102220;
-  --sidebar-accent: #1c2a28;
-  --sidebar-accent-foreground: #f3eee6;
-  --sidebar-border: #31413d;
-  --sidebar-ring: #7ad4c8;
+  --border: #1e3f35;
+  --input: #1e3f35;
+  --ring: #34d399;
+  --chart-1: #34d399;
+  --chart-2: #5eead4;
+  --chart-3: #94a3b8;
+  --chart-4: #134e4a;
+  --chart-5: #f8fafc;
+  --sidebar: #062017;
+  --sidebar-foreground: #f8fafc;
+  --sidebar-primary: #34d399;
+  --sidebar-primary-foreground: #062017;
+  --sidebar-accent: #0f4c3a;
+  --sidebar-accent-foreground: #f8fafc;
+  --sidebar-border: #1e3f35;
+  --sidebar-ring: #34d399;
 }
 
 @layer base {
@@ -153,8 +150,8 @@
   h3,
   h4 {
     font-family: var(--font-heading);
-    line-height: 1.25;
-    letter-spacing: -0.02em;
+    line-height: 1.2;
+    letter-spacing: -0.03em;
     color: var(--brand-ink);
   }
 
@@ -163,7 +160,7 @@
   }
 
   ::selection {
-    background: color-mix(in oklab, var(--primary) 22%, white);
+    background: color-mix(in oklab, var(--emerald) 28%, white);
   }
 }
 
@@ -175,6 +172,28 @@
 
   .text-balance {
     text-wrap: balance;
+  }
+
+  .bg-mesh {
+    background-image:
+      radial-gradient(at 8% 0%, rgb(16 185 129 / 0.16) 0px, transparent 42%),
+      radial-gradient(at 92% 8%, rgb(15 76 58 / 0.12) 0px, transparent 46%),
+      radial-gradient(at 78% 88%, rgb(20 184 166 / 0.1) 0px, transparent 40%),
+      radial-gradient(at 12% 78%, rgb(52 211 153 / 0.08) 0px, transparent 36%);
+  }
+
+  .bg-dot-grid {
+    background-image: radial-gradient(rgb(15 76 58 / 0.09) 1px, transparent 1px);
+    background-size: 22px 22px;
+  }
+
+  .glass-panel {
+    background: rgb(255 255 255 / 0.62);
+    border: 1px solid rgb(255 255 255 / 0.7);
+    box-shadow:
+      0 1px 1px rgb(15 76 58 / 0.04),
+      0 18px 40px rgb(15 76 58 / 0.08);
+    backdrop-filter: blur(18px);
   }
 }
 

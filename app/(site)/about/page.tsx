@@ -46,7 +46,7 @@ export default async function AboutPage() {
       <section
         id="disclosure"
         aria-labelledby="value-heading"
-        className="border-y bg-[#efe8d8]/70"
+        className="border-y border-slate-200/80 bg-slate-50/80"
       >
         <div className="mx-auto w-full max-w-6xl px-4 py-14 sm:px-6">
           <h2 id="value-heading" className="text-2xl font-semibold">

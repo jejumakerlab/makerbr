@@ -22,18 +22,24 @@ export default async function HomePage() {
 
       <section
         aria-labelledby="store-highlight-heading"
-        className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6"
+        className="mx-auto w-full max-w-6xl px-4 py-20 sm:px-6"
       >
-        <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <div className="mb-10 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <h2 id="store-highlight-heading" className="text-2xl font-semibold">
+            <p className="text-xs font-semibold tracking-[0.18em] text-emerald-600 uppercase">
+              Store
+            </p>
+            <h2 id="store-highlight-heading" className="mt-2 text-2xl font-semibold tracking-tight sm:text-3xl">
               메이커 스토어
             </h2>
             <p className="text-muted-foreground mt-1">
               지역 메이커와 자체 제작 상품을 소개합니다.
             </p>
           </div>
-          <Link href="/store" className={cn(buttonVariants({ variant: "outline", size: "xl" }))}>
+          <Link
+            href="/store"
+            className={cn(buttonVariants({ variant: "outline", size: "xl" }), "rounded-full")}
+          >
             스토어 전체 보기
           </Link>
         </div>
@@ -42,12 +48,15 @@ export default async function HomePage() {
 
       <section
         aria-labelledby="event-highlight-heading"
-        className="bg-[#efe8d8]/60 border-y"
+        className="border-y border-slate-200/80 bg-slate-50/70"
       >
-        <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
-          <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <div className="mx-auto w-full max-w-6xl px-4 py-20 sm:px-6">
+          <div className="mb-10 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <h2 id="event-highlight-heading" className="text-2xl font-semibold">
+              <p className="text-xs font-semibold tracking-[0.18em] text-emerald-600 uppercase">
+                Programs
+              </p>
+              <h2 id="event-highlight-heading" className="mt-2 text-2xl font-semibold tracking-tight sm:text-3xl">
                 최신 교육 · 이벤트
               </h2>
               <p className="text-muted-foreground mt-1">
@@ -56,7 +65,7 @@ export default async function HomePage() {
             </div>
             <Link
               href="/events"
-              className={cn(buttonVariants({ variant: "outline", size: "xl" }))}
+              className={cn(buttonVariants({ variant: "outline", size: "xl" }), "rounded-full")}
             >
               교육 전체 보기
             </Link>

@@ -34,7 +34,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="ko"
       className={`${notoSansKr.variable} ${outfit.variable} h-full antialiased`}
     >
-      <body className="flex min-h-full flex-col">
+      <body className="flex min-h-full flex-col bg-[#F8FAFC]">
         <SkipLink />
         <CartProvider>
           {children}

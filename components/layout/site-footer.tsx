@@ -5,27 +5,27 @@ import { SiteLogo } from "@/components/layout/site-logo";
 
 export function SiteFooter() {
   return (
-    <footer className="bg-brand-ink text-background mt-auto">
-      <div className="mx-auto grid w-full max-w-6xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-4">
+    <footer className="mt-auto bg-[#0f4c3a] text-white">
+      <div className="mx-auto grid w-full max-w-6xl gap-10 px-4 py-16 sm:px-6 md:grid-cols-4">
         <div className="md:col-span-2">
-          <div className="[&_span]:text-background [&_.text-muted-foreground]:text-background/70">
+          <div className="[&_span]:text-white [&_.text-slate-500]:text-emerald-100/70">
             <SiteLogo />
           </div>
-          <p className="mt-4 max-w-md text-sm leading-7 text-white/80">
+          <p className="mt-4 max-w-md text-sm leading-7 text-emerald-50/80">
             {SITE.slogan}. 메이커 교육, 로컬 제작, 친환경 유통을 연결하는 사회적기업입니다.
           </p>
         </div>
 
         <div>
-          <h2 className="font-[family-name:var(--font-heading)] text-sm font-semibold tracking-wide text-white">
+          <h2 className="font-[family-name:var(--font-heading)] text-sm font-semibold tracking-tight text-white">
             바로가기
           </h2>
-          <ul className="mt-4 space-y-2">
+          <ul className="mt-4 space-y-1">
             {NAV_ITEMS.slice(1).map((item) => (
               <li key={item.href}>
                 <Link
                   href={item.href}
-                  className="inline-flex min-h-11 items-center text-sm text-white/80 underline-offset-4 hover:text-white hover:underline"
+                  className="inline-flex min-h-11 items-center text-sm text-emerald-50/80 underline-offset-4 hover:text-white hover:underline"
                 >
                   {item.label}
                 </Link>
@@ -35,10 +35,10 @@ export function SiteFooter() {
         </div>
 
         <div>
-          <h2 className="font-[family-name:var(--font-heading)] text-sm font-semibold tracking-wide text-white">
+          <h2 className="font-[family-name:var(--font-heading)] text-sm font-semibold tracking-tight text-white">
             연락처
           </h2>
-          <ul className="mt-4 space-y-3 text-sm text-white/80">
+          <ul className="mt-4 space-y-3 text-sm text-emerald-50/80">
             <li className="flex items-start gap-2">
               <MapPin className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
               <span>{SITE.address}</span>
@@ -80,7 +80,7 @@ export function SiteFooter() {
         </div>
       </div>
       <div className="border-t border-white/10">
-        <div className="text-background/70 mx-auto flex w-full max-w-6xl flex-col gap-2 px-4 py-5 text-xs sm:flex-row sm:items-center sm:justify-between sm:px-6">
+        <div className="mx-auto flex w-full max-w-6xl flex-col gap-2 px-4 py-5 text-xs text-emerald-100/60 sm:flex-row sm:items-center sm:justify-between sm:px-6">
           <p>
             © {new Date().getFullYear()} {SITE.nameKo}. Social enterprise.
           </p>
