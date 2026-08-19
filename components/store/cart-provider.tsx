@@ -25,41 +25,90 @@ type CartState = {
 };
 
 const STORAGE_KEY = "makerbridge-cart";
+const EMPTY_CART: CartItem[] = [];
 
-function readCart(): CartItem[] {
-  if (typeof window === "undefined") return [];
-  try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
-    return raw ? (JSON.parse(raw) as CartItem[]) : [];
-  } catch {
-    return [];
-  }
-}
-
-let memoryCart: CartItem[] = [];
+let snapshot: CartItem[] = EMPTY_CART;
+let snapshotRaw = "[]";
+let hydrated = false;
 const listeners = new Set<() => void>();
 
 function emit() {
   listeners.forEach((listener) => listener());
 }
 
-function subscribe(listener: () => void) {
-  listeners.add(listener);
-  return () => listeners.delete(listener);
+function parseCart(raw: string | null): CartItem[] {
+  if (!raw) return EMPTY_CART;
+  try {
+    const parsed = JSON.parse(raw) as CartItem[];
+    if (!Array.isArray(parsed) || parsed.length === 0) return EMPTY_CART;
+    return parsed.filter(
+      (item) =>
+        item &&
+        typeof item === "object" &&
+        item.product &&
+        typeof item.product.id === "string" &&
+        Number.isFinite(item.quantity) &&
+        item.quantity > 0,
+    );
+  } catch {
+    return EMPTY_CART;
+  }
+}
+
+function hydrateFromStorage() {
+  if (hydrated || typeof window === "undefined") return;
+  hydrated = true;
+  const next = parseCart(window.localStorage.getItem(STORAGE_KEY));
+  snapshot = next;
+  snapshotRaw = JSON.stringify(next);
 }
 
 function getSnapshot() {
-  return typeof window === "undefined" ? memoryCart : readCart();
+  hydrateFromStorage();
+  return snapshot;
 }
 
 function getServerSnapshot() {
-  return memoryCart;
+  return EMPTY_CART;
 }
 
 function writeCart(items: CartItem[]) {
-  memoryCart = items;
-  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+  const next = items.length === 0 ? EMPTY_CART : items;
+  const raw = JSON.stringify(next);
+  if (raw === snapshotRaw) return;
+
+  snapshot = next;
+  snapshotRaw = raw;
+
+  try {
+    window.localStorage.setItem(STORAGE_KEY, raw);
+  } catch {
+    // quota / private mode
+  }
   emit();
+}
+
+function handleStorage(event: StorageEvent) {
+  if (event.key !== STORAGE_KEY) return;
+  const next = parseCart(event.newValue);
+  const raw = JSON.stringify(next);
+  if (raw === snapshotRaw) return;
+  snapshot = next;
+  snapshotRaw = raw;
+  emit();
+}
+
+function subscribe(listener: () => void) {
+  listeners.add(listener);
+  if (typeof window !== "undefined" && listeners.size === 1) {
+    window.addEventListener("storage", handleStorage);
+  }
+  return () => {
+    listeners.delete(listener);
+    if (typeof window !== "undefined" && listeners.size === 0) {
+      window.removeEventListener("storage", handleStorage);
+    }
+  };
 }
 
 const CartContext = createContext<CartState | null>(null);
@@ -69,7 +118,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const value = useMemo<CartState>(() => {
     const add = (product: Product, quantity = 1) => {
-      const current = readCart();
+      const current = getSnapshot();
       const existing = current.find((item) => item.product.id === product.id);
       const next = existing
         ? current.map((item) =>
@@ -82,7 +131,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     };
 
     const remove = (productId: string) => {
-      writeCart(readCart().filter((item) => item.product.id !== productId));
+      writeCart(getSnapshot().filter((item) => item.product.id !== productId));
     };
 
     const setQuantity = (productId: string, quantity: number) => {
@@ -91,13 +140,13 @@ export function CartProvider({ children }: { children: ReactNode }) {
         return;
       }
       writeCart(
-        readCart().map((item) =>
+        getSnapshot().map((item) =>
           item.product.id === productId ? { ...item, quantity } : item,
         ),
       );
     };
 
-    const clear = () => writeCart([]);
+    const clear = () => writeCart(EMPTY_CART);
     const count = items.reduce((sum, item) => sum + item.quantity, 0);
     const total = items.reduce((sum, item) => {
       const price = item.product.sale_price ?? item.product.price;
