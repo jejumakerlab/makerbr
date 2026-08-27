@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { HomeHero } from "@/components/home/home-hero";
 import { ImpactCounters } from "@/components/home/impact-counters";
-import { SocialValueBanner } from "@/components/home/social-value-banner";
 import { ProductGrid } from "@/components/store/product-card";
 import { EventCard } from "@/components/events/event-card";
 import { buttonVariants } from "@/components/ui/button";
@@ -83,8 +82,6 @@ export default async function HomePage() {
           </ul>
         </div>
       </section>
-
-      <SocialValueBanner />
     </>
   );
 }

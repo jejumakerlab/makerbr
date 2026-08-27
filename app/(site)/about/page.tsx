@@ -1,25 +1,21 @@
 import type { Metadata } from "next";
 import { MapPin } from "lucide-react";
 import { PageHero } from "@/components/layout/page-hero";
-import { getCertificates, getSiteSettings } from "@/lib/data/queries";
-import { formatDate } from "@/lib/format";
+import { getSiteSettings } from "@/lib/data/queries";
 
 export const metadata: Metadata = {
   title: "회사소개",
-  description: "메이커브릿지의 미션, 사회적 가치, 인증 및 오시는 길",
+  description: "메이커브릿지의 미션, 비전 및 오시는 길",
 };
 
 export default async function AboutPage() {
-  const [certificates, site] = await Promise.all([
-    getCertificates(),
-    getSiteSettings(),
-  ]);
+  const site = await getSiteSettings();
 
   return (
     <>
       <PageHero
         eyebrow="About"
-        title="사람과 기술, 지역을 잇는 사회적기업"
+        title="사람과 기술, 지역을 잇는 메이커"
         description="누구나 만들고 배우며 지역과 함께 성장하는 메이커 생태계를 만듭니다."
       />
 
@@ -46,19 +42,19 @@ export default async function AboutPage() {
       </div>
 
       <section
-        id="disclosure"
+        id="values"
         aria-labelledby="value-heading"
         className="border-y border-slate-200/80 bg-slate-50/80"
       >
         <div className="mx-auto w-full max-w-6xl px-4 py-14 sm:px-6">
           <h2 id="value-heading" className="text-2xl font-semibold">
-            사회적 가치 실현
+            우리가 지향하는 가치
           </h2>
           <ul className="mt-8 grid gap-6 md:grid-cols-3">
             {[
               ["포용 교육", "연령·장애 여부와 관계없이 참여 가능한 메이커 커리큘럼"],
               ["지역 순환", "폐기 소재 업사이클과 로컬 메이커 판로 연결"],
-              ["공공 협력", "우선구매·수의계약으로 공공의 사회적 가치 구매를 지원"],
+              ["공공 협력", "학교·공공·마을과 함께하는 교육·제작 협력"],
             ].map(([title, body]) => (
               <li key={title} className="bg-card rounded-2xl border p-6">
                 <h3 className="text-lg font-semibold">{title}</h3>
@@ -67,40 +63,6 @@ export default async function AboutPage() {
             ))}
           </ul>
         </div>
-      </section>
-
-      <section
-        id="certificates"
-        aria-labelledby="cert-heading"
-        className="mx-auto w-full max-w-6xl px-4 py-14 sm:px-6"
-      >
-        <h2 id="cert-heading" className="text-2xl font-semibold">
-          인증서 · 경영공시 자료
-        </h2>
-        <p className="text-muted-foreground mt-2">
-          관리자가 업로드한 인증·공시 자료가 갤러리로 공개됩니다.
-        </p>
-        <ul className="mt-8 grid gap-4 sm:grid-cols-2">
-          {certificates.map((item) => (
-            <li key={item.id} className="bg-card rounded-2xl border p-5">
-              <p className="font-semibold">{item.title}</p>
-              <p className="text-muted-foreground mt-1 text-sm">
-                {item.issued_by}
-                {item.issued_on ? ` · ${formatDate(item.issued_on)}` : ""}
-              </p>
-              {item.file_url ? (
-                <a
-                  href={item.file_url}
-                  className="text-primary mt-3 inline-flex min-h-11 items-center underline-offset-4 hover:underline"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  자료 열기 (새 창)
-                </a>
-              ) : null}
-            </li>
-          ))}
-        </ul>
       </section>
 
       <section

@@ -51,7 +51,7 @@ export function HomeHero({
         <div>
           <p className="inline-flex items-center gap-2 rounded-full border border-emerald-200/80 bg-white/70 px-3 py-1 text-xs font-medium tracking-wide text-[#134e4a] shadow-sm backdrop-blur-md">
             <Sparkles className="size-3.5 text-emerald-500" aria-hidden="true" />
-            제주 사회적기업 · Impact Maker
+            제주 메이커 · 로컬 제작
           </p>
           <h1
             id="hero-heading"

@@ -73,14 +73,14 @@ on conflict (slug) do nothing;
 
 insert into public.posts (type, title, slug, content, excerpt, is_published, pinned)
 values
-  ('notice', '2026년 하반기 공공기관 우선구매 안내', 'priority-purchase-2026',
-   '사회적기업 제품 우선구매 제도에 따라 수의계약 및 조달 문의가 가능합니다. 견적/문의 페이지를 이용해 주세요.',
-   '공공기관 우선구매·수의계약 안내', true, true),
+  ('notice', '2026년 하반기 교육·제작 문의 안내', 'priority-purchase-2026',
+   '공공·학교 대상 교육 과정과 제작 문의는 견적/문의 페이지를 이용해 주세요. 담당자가 확인 후 회신합니다.',
+   '공공·학교 협력 및 견적 안내', true, true),
   ('story', '학교 메이커 교실에서 나온 첫 프로토타입', 'school-prototype-story',
    '학생들이 폐플라스틱과 3D 프린팅을 결합해 문구 정리함을 만들었습니다.',
    '지역 학교와 함께한 메이커 교육 이야기', true, false),
   ('faq', '공공기관도 구매·교육 의뢰가 가능한가요?', 'faq-public-purchase',
-   '가능합니다. 사회적기업 육성법에 따른 우선구매 및 수의계약을 지원하며, 견적서를 발급합니다.',
+   '가능합니다. 교육 과정과 제작 의뢰에 대해 견적서를 발급합니다. 견적/문의 페이지로 연락 주세요.',
    '공공 구매 FAQ', true, false)
 on conflict (slug) do nothing;
 

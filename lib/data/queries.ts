@@ -28,6 +28,14 @@ type QueryResult<T> = {
   error: QueryError;
 };
 
+type FromTableOptions = {
+  /**
+   * 요청마다 최신 데이터를 쓰기 위해 connection()을 기다립니다.
+   * generateStaticParams처럼 빌드 시점에 호출할 때는 false로 둡니다.
+   */
+  waitForRequest?: boolean;
+};
+
 /**
  * DB 조회가 성공하면 그 결과(빈 배열 포함)를 그대로 씁니다.
  * Fallback은 클라이언트가 없거나 쿼리가 실패할 때만 사용합니다.
@@ -36,8 +44,11 @@ async function fromTable<T>(
   table: string,
   fallback: T[],
   build: (client: PublicSupabaseClient) => Promise<QueryResult<T>>,
+  options: FromTableOptions = {},
 ): Promise<T[]> {
-  await connection();
+  if (options.waitForRequest !== false) {
+    await connection();
+  }
   const supabase = createPublicClient();
   if (!supabase) {
     console.warn(`[data] ${table}: Supabase 미설정 — fallback 사용`);
@@ -122,6 +133,24 @@ export async function getProductBySlug(slug: string) {
   return products.find((item) => item.slug === slug) ?? null;
 }
 
+/** generateStaticParams 전용. 빌드 시점이므로 connection()을 호출하지 않습니다. */
+export async function getPublishedProductSlugs() {
+  const rows = await fromTable<{ slug: string }>(
+    "products",
+    MOCK_PRODUCTS.map((item) => ({ slug: item.slug })),
+    async (supabase) => {
+      const { data, error } = await supabase
+        .from("products")
+        .select("slug")
+        .eq("is_published", true);
+      return { data: data as { slug: string }[] | null, error };
+    },
+    { waitForRequest: false },
+  );
+
+  return rows.map((item) => item.slug).filter(Boolean);
+}
+
 export async function getEvents(category?: string) {
   const events = await fromTable<EventItem>("events", MOCK_EVENTS, async (supabase) => {
     const { data, error } = await supabase
@@ -154,6 +183,24 @@ export async function getEvents(category?: string) {
 export async function getEventBySlug(slug: string) {
   const events = await getEvents();
   return events.find((item) => item.slug === slug) ?? null;
+}
+
+/** generateStaticParams 전용. 빌드 시점이므로 connection()을 호출하지 않습니다. */
+export async function getPublishedEventSlugs() {
+  const rows = await fromTable<{ slug: string }>(
+    "events",
+    MOCK_EVENTS.map((item) => ({ slug: item.slug })),
+    async (supabase) => {
+      const { data, error } = await supabase
+        .from("events")
+        .select("slug")
+        .eq("is_published", true);
+      return { data: data as { slug: string }[] | null, error };
+    },
+    { waitForRequest: false },
+  );
+
+  return rows.map((item) => item.slug).filter(Boolean);
 }
 
 export async function getPosts(type?: PostType) {

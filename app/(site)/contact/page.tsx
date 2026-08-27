@@ -7,7 +7,7 @@ import { getSiteSettings } from "@/lib/data/queries";
 
 export const metadata: Metadata = {
   title: "견적/문의",
-  description: "맞춤 제작·교육 견적 요청 및 공공기관 우선구매 안내",
+  description: "맞춤 제작·교육 견적 요청 및 공공·학교 협력 안내",
 };
 
 export default async function ContactPage() {
@@ -17,7 +17,7 @@ export default async function ContactPage() {
       <PageHero
         eyebrow="Contact"
         title="견적 · 문의"
-        description="맞춤 제작, 교육 과정, 공공기관 우선구매 수의계약을 상담합니다."
+        description="맞춤 제작, 교육 과정, 공공·학교 협력을 상담합니다."
       />
       <div className="mx-auto grid w-full max-w-6xl gap-10 px-4 py-12 sm:px-6 lg:grid-cols-[1fr_0.85fr]">
         <QuoteForm />
@@ -26,12 +26,12 @@ export default async function ContactPage() {
             <div className="flex items-center gap-2">
               <ShieldCheck className="text-primary size-5" aria-hidden="true" />
               <h2 id="priority-heading" className="text-lg font-semibold">
-                공공기관 우선구매 · 수의계약
+                공공·학교 협력
               </h2>
             </div>
             <p className="text-muted-foreground mt-3 text-sm leading-7">
-              「사회적기업 육성법」에 따른 사회적기업 제품·서비스는 공공기관 우선구매
-              대상입니다. 수의계약 가능 여부와 견적서는 담당자가 확인 후 회신합니다.
+              교육 과정, 찾아가는 교실, 제품 납품 문의는 담당자가 확인 후 견적서와
+              함께 회신합니다.
             </p>
             <ul className="text-muted-foreground mt-4 list-disc space-y-1 pl-5 text-sm">
               <li>교육 과정 / 찾아가는 메이커 교실</li>

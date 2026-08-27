@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Image from "next/image";
-import { getProductBySlug, getProducts } from "@/lib/data/queries";
+import { getProductBySlug, getPublishedProductSlugs } from "@/lib/data/queries";
 import { formatKRW } from "@/lib/format";
 import { PRODUCT_CATEGORIES } from "@/lib/constants";
 import { AddToCartButton } from "@/components/store/add-to-cart-button";
@@ -64,6 +64,6 @@ export default async function ProductDetailPage({ params }: Props) {
 }
 
 export async function generateStaticParams() {
-  const products = await getProducts();
-  return products.map((product) => ({ slug: product.slug }));
+  const slugs = await getPublishedProductSlugs();
+  return slugs.map((slug) => ({ slug }));
 }

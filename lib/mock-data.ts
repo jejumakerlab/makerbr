@@ -162,11 +162,11 @@ export const MOCK_POSTS: Post[] = [
   {
     id: "post-1",
     type: "notice",
-    title: "2026년 하반기 공공기관 우선구매 안내",
+    title: "2026년 하반기 교육·제작 문의 안내",
     slug: "priority-purchase-2026",
     content:
-      "사회적기업 제품 우선구매 제도에 따라 수의계약 및 조달 문의가 가능합니다. 견적/문의 페이지를 이용해 주세요.",
-    excerpt: "공공기관 우선구매·수의계약 안내",
+      "공공·학교 대상 교육 과정과 제작 문의는 견적/문의 페이지를 이용해 주세요. 담당자가 확인 후 회신합니다.",
+    excerpt: "공공·학교 협력 및 견적 안내",
     cover_image: null,
     is_published: true,
     pinned: true,
@@ -193,7 +193,7 @@ export const MOCK_POSTS: Post[] = [
     title: "공공기관도 구매·교육 의뢰가 가능한가요?",
     slug: "faq-public-purchase",
     content:
-      "가능합니다. 사회적기업 육성법에 따른 우선구매 및 수의계약을 지원하며, 견적서를 발급합니다.",
+      "가능합니다. 교육 과정과 제작 의뢰에 대해 견적서를 발급합니다. 견적/문의 페이지로 연락 주세요.",
     excerpt: "공공 구매 FAQ",
     cover_image: null,
     is_published: true,

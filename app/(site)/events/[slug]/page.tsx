@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Image from "next/image";
-import { getEventBySlug, getEvents } from "@/lib/data/queries";
+import { getEventBySlug, getPublishedEventSlugs } from "@/lib/data/queries";
 import { EVENT_CATEGORIES } from "@/lib/constants";
 import { formatDateTime, formatKRW, remainingSeats } from "@/lib/format";
 import { Badge } from "@/components/ui/badge";
@@ -64,6 +64,6 @@ export default async function EventDetailPage({ params }: Props) {
 }
 
 export async function generateStaticParams() {
-  const events = await getEvents();
-  return events.map((event) => ({ slug: event.slug }));
+  const slugs = await getPublishedEventSlugs();
+  return slugs.map((slug) => ({ slug }));
 }

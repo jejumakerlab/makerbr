@@ -3,7 +3,7 @@ export const SITE = {
   nameEn: "Maker Bridge",
   slogan: "만드는 사람과 세상을 잇다",
   description:
-    "제주 기반 사회적기업 메이커브릿지. 메이커 교육, 로컬 제작, 친환경 스토어와 공공 협업을 한곳에서 연결합니다.",
+    "제주 기반 메이커브릿지. 메이커 교육, 로컬 제작, 친환경 스토어와 공공 협업을 한곳에서 연결합니다.",
   email: "makerbr@naver.com",
   phone: "064-725-6728",
   phoneHref: "tel:0647256728",
