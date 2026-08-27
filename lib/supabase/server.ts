@@ -5,6 +5,7 @@ import {
   getSupabaseUrl,
   isSupabaseConfigured,
 } from "@/lib/supabase/env";
+import { noStoreFetch } from "@/lib/supabase/fetch";
 
 export async function createClient() {
   if (!isSupabaseConfigured()) return null;
@@ -16,6 +17,9 @@ export async function createClient() {
   const cookieStore = await cookies();
 
   return createServerClient(url, anonKey, {
+    global: {
+      fetch: noStoreFetch,
+    },
     cookies: {
       getAll() {
         return cookieStore.getAll();

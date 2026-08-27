@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import { getSupabaseUrl } from "@/lib/supabase/env";
+import { noStoreFetch } from "@/lib/supabase/fetch";
 
 export function createAdminClient() {
   const url = getSupabaseUrl();
@@ -9,5 +10,6 @@ export function createAdminClient() {
 
   return createClient(url, key, {
     auth: { persistSession: false, autoRefreshToken: false },
+    global: { fetch: noStoreFetch },
   });
 }

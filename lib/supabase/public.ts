@@ -4,6 +4,7 @@ import {
   getSupabaseUrl,
   isSupabaseConfigured,
 } from "@/lib/supabase/env";
+import { noStoreFetch } from "@/lib/supabase/fetch";
 
 export type PublicSupabaseClient = SupabaseClient;
 
@@ -22,6 +23,9 @@ export function createPublicClient(): PublicSupabaseClient | null {
     auth: {
       persistSession: false,
       autoRefreshToken: false,
+    },
+    global: {
+      fetch: noStoreFetch,
     },
   });
 }

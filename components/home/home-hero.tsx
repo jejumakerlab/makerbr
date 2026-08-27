@@ -25,7 +25,13 @@ const STEPS = [
   },
 ] as const;
 
-export function HomeHero() {
+export function HomeHero({
+  slogan = SITE.slogan,
+  description = SITE.description,
+}: {
+  slogan?: string;
+  description?: string;
+}) {
   return (
     <section
       aria-labelledby="hero-heading"
@@ -51,14 +57,22 @@ export function HomeHero() {
             id="hero-heading"
             className="mt-6 max-w-xl text-4xl font-semibold tracking-tight text-balance sm:text-5xl lg:text-[3.5rem] lg:leading-[1.12]"
           >
-            만드는 사람과
-            <br />
-            <span className="from-primary to-emerald-500 bg-linear-to-r bg-clip-text text-transparent">
-              세상을 잇다
-            </span>
+            {slogan === SITE.slogan ? (
+              <>
+                만드는 사람과
+                <br />
+                <span className="from-primary to-emerald-500 bg-linear-to-r bg-clip-text text-transparent">
+                  세상을 잇다
+                </span>
+              </>
+            ) : (
+              <span className="from-primary to-emerald-500 bg-linear-to-r bg-clip-text text-transparent">
+                {slogan}
+              </span>
+            )}
           </h1>
           <p className="text-muted-foreground mt-5 max-w-lg text-lg leading-8 tracking-tight">
-            {SITE.description}
+            {description}
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <Link

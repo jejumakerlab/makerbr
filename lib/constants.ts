@@ -4,14 +4,71 @@ export const SITE = {
   slogan: "만드는 사람과 세상을 잇다",
   description:
     "제주 기반 사회적기업 메이커브릿지. 메이커 교육, 로컬 제작, 친환경 스토어와 공공 협업을 한곳에서 연결합니다.",
-  email: "hello@makerbridge.kr",
-  phone: "064-000-0000",
-  phoneHref: "tel:0640000000",
-  address: "제주특별자치도 제주시",
+  email: "makerbr@naver.com",
+  phone: "064-725-6728",
+  phoneHref: "tel:0647256728",
+  address: "제주특별자치도 제주시 승천로 57, 3층 104호",
   hours: "평일 10:00 – 18:00 (주말·공휴일 휴무)",
-  businessNumber: "000-00-00000",
-  socialEnterpriseNo: "제0000-00호",
+  businessNumber: "599-81-04086",
+  socialEnterpriseNo: "",
 } as const;
+
+export type SiteContent = {
+  nameKo: string;
+  nameEn: string;
+  slogan: string;
+  description: string;
+  email: string;
+  phone: string;
+  phoneHref: string;
+  address: string;
+  hours: string;
+  businessNumber: string;
+  socialEnterpriseNo: string;
+};
+
+export function phoneToHref(phone: string) {
+  return `tel:${phone.replace(/\D/g, "")}`;
+}
+
+const STALE_SITE_VALUES = new Set([
+  "제주특별자치도 제주시",
+  "hello@makerbridge.kr",
+  "064-000-0000",
+  "000-00-00000",
+  "제0000-00호",
+]);
+
+function settingOrDefault(value: string | undefined, fallback: string) {
+  if (!value || STALE_SITE_VALUES.has(value)) return fallback;
+  return value;
+}
+
+/** `site_settings` 행을 SITE 기본값 위에 덮어씁니다. 조회 실패 시에만 호출하지 않습니다. */
+export function mergeSiteSettings(
+  rows: { key: string; value: string }[],
+): SiteContent {
+  const map: Record<string, string> = {};
+  for (const row of rows) {
+    const value = row.value?.trim();
+    if (row.key && value) map[row.key] = value;
+  }
+
+  const phone = settingOrDefault(map.phone, SITE.phone);
+  return {
+    nameKo: map.name_ko ?? SITE.nameKo,
+    nameEn: map.name_en ?? SITE.nameEn,
+    slogan: map.slogan ?? SITE.slogan,
+    description: map.hero_sub ?? map.description ?? SITE.description,
+    email: settingOrDefault(map.email, SITE.email),
+    phone,
+    phoneHref: phoneToHref(phone),
+    address: settingOrDefault(map.address, SITE.address),
+    hours: map.hours ?? SITE.hours,
+    businessNumber: settingOrDefault(map.business_number, SITE.businessNumber),
+    socialEnterpriseNo: settingOrDefault(map.social_enterprise_no, SITE.socialEnterpriseNo),
+  };
+}
 
 export const SNS = [
   {

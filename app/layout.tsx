@@ -6,6 +6,9 @@ import { CartProvider } from "@/components/store/cart-provider";
 import { SITE } from "@/lib/constants";
 import "./globals.css";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 const notoSansKr = Noto_Sans_KR({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],

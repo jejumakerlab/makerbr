@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { MapPin } from "lucide-react";
 import { PageHero } from "@/components/layout/page-hero";
-import { getCertificates } from "@/lib/data/queries";
-import { SITE } from "@/lib/constants";
+import { getCertificates, getSiteSettings } from "@/lib/data/queries";
 import { formatDate } from "@/lib/format";
 
 export const metadata: Metadata = {
@@ -11,7 +10,10 @@ export const metadata: Metadata = {
 };
 
 export default async function AboutPage() {
-  const certificates = await getCertificates();
+  const [certificates, site] = await Promise.all([
+    getCertificates(),
+    getSiteSettings(),
+  ]);
 
   return (
     <>
@@ -110,12 +112,12 @@ export default async function AboutPage() {
         </h2>
         <p className="text-muted-foreground mt-3 flex items-start gap-2">
           <MapPin className="mt-1 size-4 shrink-0" aria-hidden="true" />
-          {SITE.address} · {SITE.hours}
+          {site.address} · {site.hours}
         </p>
         <div className="bg-muted mt-6 overflow-hidden rounded-2xl border">
           <iframe
             title="메이커브릿지 위치 지도"
-            src="https://maps.google.com/maps?q=제주특별자치도%20제주시&t=&z=13&ie=UTF8&iwloc=&output=embed"
+            src={`https://maps.google.com/maps?q=${encodeURIComponent(site.address)}&t=&z=13&ie=UTF8&iwloc=&output=embed`}
             className="h-80 w-full border-0"
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"

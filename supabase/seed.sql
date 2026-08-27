@@ -9,11 +9,15 @@ on conflict (key) do nothing;
 
 insert into public.site_settings (key, value) values
   ('slogan', '만드는 사람과 세상을 잇다'),
-  ('hero_sub', '제주에서 시작하는 메이커 교육, 로컬 제작, 사회적 가치의 다리.'),
-  ('address', '제주특별자치도 제주시'),
-  ('email', 'hello@makerbridge.kr'),
-  ('phone', '064-000-0000')
+  ('hero_sub', '제주에서 시작하는 메이커 교육, 로컬 제작, 사회적 가치의 다리.')
 on conflict (key) do nothing;
+
+insert into public.site_settings (key, value) values
+  ('address', '제주특별자치도 제주시 승천로 57, 3층 104호'),
+  ('email', 'makerbr@naver.com'),
+  ('phone', '064-725-6728'),
+  ('business_number', '599-81-04086')
+on conflict (key) do update set value = excluded.value;
 
 insert into public.products (name, slug, description, price, sale_price, category, images, stock, is_published, maker_name, tags, sort_order)
 values

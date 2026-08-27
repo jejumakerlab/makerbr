@@ -5,11 +5,15 @@ import { SocialValueBanner } from "@/components/home/social-value-banner";
 import { ProductGrid } from "@/components/store/product-card";
 import { EventCard } from "@/components/events/event-card";
 import { buttonVariants } from "@/components/ui/button";
-import { getEvents, getImpacts, getProducts } from "@/lib/data/queries";
+import { getEvents, getImpacts, getProducts, getSiteSettings } from "@/lib/data/queries";
 import { cn } from "@/lib/utils";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default async function HomePage() {
-  const [impacts, products, events] = await Promise.all([
+  const [site, impacts, products, events] = await Promise.all([
+    getSiteSettings(),
     getImpacts(),
     getProducts(),
     getEvents(),
@@ -17,7 +21,7 @@ export default async function HomePage() {
 
   return (
     <>
-      <HomeHero />
+      <HomeHero slogan={site.slogan} description={site.description} />
       <ImpactCounters items={impacts} />
 
       <section

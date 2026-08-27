@@ -1,15 +1,17 @@
 import type { Metadata } from "next";
 import { Mail, Phone, ShieldCheck } from "lucide-react";
 import { PageHero } from "@/components/layout/page-hero";
-import { SITE, SNS } from "@/lib/constants";
+import { SNS } from "@/lib/constants";
 import { QuoteForm } from "@/components/contact/quote-form";
+import { getSiteSettings } from "@/lib/data/queries";
 
 export const metadata: Metadata = {
   title: "견적/문의",
   description: "맞춤 제작·교육 견적 요청 및 공공기관 우선구매 안내",
 };
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const site = await getSiteSettings();
   return (
     <>
       <PageHero
@@ -42,18 +44,18 @@ export default function ContactPage() {
               직접 연락
             </h2>
             <a
-              href={SITE.phoneHref}
+              href={site.phoneHref}
               className="mt-4 flex min-h-11 items-center gap-2 text-sm underline-offset-4 hover:underline"
             >
               <Phone className="size-4" aria-hidden="true" />
-              {SITE.phone}
+              {site.phone}
             </a>
             <a
-              href={`mailto:${SITE.email}`}
+              href={`mailto:${site.email}`}
               className="flex min-h-11 items-center gap-2 text-sm underline-offset-4 hover:underline"
             >
               <Mail className="size-4" aria-hidden="true" />
-              {SITE.email}
+              {site.email}
             </a>
             <ul className="mt-4 flex flex-wrap gap-3">
               {SNS.map((item) => (

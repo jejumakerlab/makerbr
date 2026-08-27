@@ -4,9 +4,13 @@ import { RouteNotice } from "@/components/auth/route-notice";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { getAuthState } from "@/lib/auth/session";
+import { getSiteSettings } from "@/lib/data/queries";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export default async function SiteLayout({ children }: { children: ReactNode }) {
-  const auth = await getAuthState();
+  const [auth, site] = await Promise.all([getAuthState(), getSiteSettings()]);
 
   return (
     <>
@@ -17,7 +21,7 @@ export default async function SiteLayout({ children }: { children: ReactNode }) 
       <main id="main-content" className="flex-1">
         {children}
       </main>
-      <SiteFooter />
+      <SiteFooter site={site} />
     </>
   );
 }
