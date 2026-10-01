@@ -13,10 +13,13 @@ insert into public.site_settings (key, value) values
 on conflict (key) do nothing;
 
 insert into public.site_settings (key, value) values
-  ('address', '제주특별자치도 제주시 승천로 57, 3층 104호'),
+  ('address', '제주특별자치도 제주시 승천로 57, 3층 비즈테이블 104호'),
+  ('postal_code', '63227'),
   ('email', 'makerbr@naver.com'),
   ('phone', '064-725-6728'),
-  ('business_number', '599-81-04086')
+  ('fax', '0504-244-6728'),
+  ('business_number', '599-81-04086'),
+  ('mail_order_number', '제 2026-제주아라-0104호')
 on conflict (key) do update set value = excluded.value;
 
 insert into public.products (name, slug, description, price, sale_price, category, images, stock, is_published, maker_name, tags, sort_order)

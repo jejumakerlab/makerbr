@@ -25,6 +25,16 @@ const STEPS = [
   },
 ] as const;
 
+function splitSlogan(slogan: string) {
+  const lines = slogan
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean);
+  if (lines.length > 1) return lines;
+  if (slogan === SITE.slogan) return ["만드는 사람과", "세상을 잇다"];
+  return lines;
+}
+
 export function HomeHero({
   slogan = SITE.slogan,
   description = SITE.description,
@@ -32,6 +42,11 @@ export function HomeHero({
   slogan?: string;
   description?: string;
 }) {
+  const lines = splitSlogan(slogan);
+  const leadLines = lines.slice(0, -1);
+  const accentLine = lines.at(-1) ?? "";
+  const isLong = slogan.replace(/\s/g, "").length > 16;
+
   return (
     <section
       aria-labelledby="hero-heading"
@@ -55,23 +70,25 @@ export function HomeHero({
           </p>
           <h1
             id="hero-heading"
-            className="mt-6 max-w-xl text-4xl font-semibold tracking-tight text-balance sm:text-5xl lg:text-[3.5rem] lg:leading-[1.12]"
-          >
-            {slogan === SITE.slogan ? (
-              <>
-                만드는 사람과
-                <br />
-                <span className="from-primary to-emerald-500 bg-linear-to-r bg-clip-text text-transparent">
-                  세상을 잇다
-                </span>
-              </>
-            ) : (
-              <span className="from-primary to-emerald-500 bg-linear-to-r bg-clip-text text-transparent">
-                {slogan}
-              </span>
+            className={cn(
+              "mt-6 font-semibold tracking-tight break-keep text-balance",
+              isLong
+                ? "text-[1.75rem] leading-[1.32] sm:text-4xl sm:leading-[1.28] lg:text-[2.375rem]"
+                : "max-w-xl text-4xl sm:text-5xl lg:text-[3.5rem] lg:leading-[1.12]",
             )}
+          >
+            {leadLines.map((line) => (
+              <span key={line} className="block">
+                {line}
+              </span>
+            ))}
+            <span className={cn("block", isLong && leadLines.length > 0 && "mt-1.5 sm:mt-2")}>
+              <span className="from-primary to-emerald-500 bg-linear-to-r box-decoration-clone bg-clip-text text-transparent">
+                {accentLine}
+              </span>
+            </span>
           </h1>
-          <p className="text-muted-foreground mt-5 max-w-lg text-lg leading-8 tracking-tight">
+          <p className="text-muted-foreground mt-5 max-w-lg text-base leading-7 tracking-tight break-keep text-pretty sm:text-lg sm:leading-8">
             {description}
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">

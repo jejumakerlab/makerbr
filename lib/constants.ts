@@ -4,13 +4,23 @@ export const SITE = {
   slogan: "만드는 사람과 세상을 잇다",
   description:
     "제주 기반 메이커브릿지. 메이커 교육, 로컬 제작, 친환경 스토어와 공공 협업을 한곳에서 연결합니다.",
+  legalName: "주식회사 메이커브릿지",
   email: "makerbr@naver.com",
   phone: "064-725-6728",
   phoneHref: "tel:0647256728",
-  address: "제주특별자치도 제주시 승천로 57, 3층 104호",
-  hours: "평일 10:00 – 18:00 (주말·공휴일 휴무)",
+  fax: "0504-244-6728",
+  postalCode: "63227",
+  address: "제주특별자치도 제주시 승천로 57, 3층 비즈테이블 104호",
+  hours: "평일 09:00 – 18:00 (토·일·공휴일 휴무)",
+  weekdayHours: "09시 - 18시",
+  holidays: "토, 일, 공휴일",
+  ceo: "이다혜",
   businessNumber: "599-81-04086",
-  socialEnterpriseNo: "",
+  mailOrderNumber: "제 2026-제주아라-0104호",
+  privacyOfficer: "이다혜",
+  bankName: "우리은행",
+  bankAccount: "1005-904-959437",
+  bankHolder: "(주)메이커브릿지",
 } as const;
 
 export type SiteContent = {
@@ -18,13 +28,23 @@ export type SiteContent = {
   nameEn: string;
   slogan: string;
   description: string;
+  legalName: string;
   email: string;
   phone: string;
   phoneHref: string;
+  fax: string;
+  postalCode: string;
   address: string;
   hours: string;
+  weekdayHours: string;
+  holidays: string;
+  ceo: string;
   businessNumber: string;
-  socialEnterpriseNo: string;
+  mailOrderNumber: string;
+  privacyOfficer: string;
+  bankName: string;
+  bankAccount: string;
+  bankHolder: string;
 };
 
 export function phoneToHref(phone: string) {
@@ -33,6 +53,7 @@ export function phoneToHref(phone: string) {
 
 const STALE_SITE_VALUES = new Set([
   "제주특별자치도 제주시",
+  "제주특별자치도 제주시 승천로 57, 3층 104호",
   "hello@makerbridge.kr",
   "064-000-0000",
   "000-00-00000",
@@ -60,31 +81,38 @@ export function mergeSiteSettings(
     nameEn: map.name_en ?? SITE.nameEn,
     slogan: map.slogan ?? SITE.slogan,
     description: map.hero_sub ?? map.description ?? SITE.description,
+    legalName: map.legal_name ?? SITE.legalName,
     email: settingOrDefault(map.email, SITE.email),
     phone,
     phoneHref: phoneToHref(phone),
+    fax: map.fax ?? SITE.fax,
+    postalCode: map.postal_code ?? SITE.postalCode,
     address: settingOrDefault(map.address, SITE.address),
     hours: map.hours ?? SITE.hours,
+    weekdayHours: map.weekday_hours ?? SITE.weekdayHours,
+    holidays: map.holidays ?? SITE.holidays,
+    ceo: map.ceo ?? SITE.ceo,
     businessNumber: settingOrDefault(map.business_number, SITE.businessNumber),
-    socialEnterpriseNo: settingOrDefault(map.social_enterprise_no, SITE.socialEnterpriseNo),
+    mailOrderNumber: map.mail_order_number ?? SITE.mailOrderNumber,
+    privacyOfficer: map.privacy_officer ?? SITE.privacyOfficer,
+    bankName: map.bank_name ?? SITE.bankName,
+    bankAccount: map.bank_account ?? SITE.bankAccount,
+    bankHolder: map.bank_holder ?? SITE.bankHolder,
   };
 }
 
 export const SNS = [
   {
+    id: "instagram",
     name: "Instagram",
-    href: "https://instagram.com/",
+    href: "https://www.instagram.com/maker__bridge",
     label: "메이커브릿지 인스타그램 (새 창)",
   },
   {
-    name: "YouTube",
-    href: "https://youtube.com/",
-    label: "메이커브릿지 유튜브 (새 창)",
-  },
-  {
+    id: "kakao",
     name: "KakaoTalk",
-    href: "https://pf.kakao.com/",
-    label: "카카오톡 채널 (새 창)",
+    href: "https://pf.kakao.com/_xcSqxiX",
+    label: "메이커브릿지 카카오톡 채널 (새 창)",
   },
 ] as const;
 
