@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
-import { Mail, MessageCircle, Phone, Printer } from "lucide-react";
+import { Mail, MessageCircle, Phone, Printer, Settings } from "lucide-react";
 import { NAV_ITEMS, SITE, SNS, type SiteContent } from "@/lib/constants";
 import { SiteLogo } from "@/components/layout/site-logo";
 
@@ -64,7 +64,13 @@ function InfoList({ rows }: { rows: [string, ReactNode][] }) {
   );
 }
 
-export function SiteFooter({ site = SITE }: { site?: SiteContent }) {
+export function SiteFooter({
+  site = SITE,
+  isStaff = false,
+}: {
+  site?: SiteContent;
+  isStaff?: boolean;
+}) {
   return (
     <footer className="mt-auto bg-[#0f4c3a] text-white">
       <div className="mx-auto w-full max-w-6xl px-4 py-14 sm:px-6">
@@ -175,9 +181,21 @@ export function SiteFooter({ site = SITE }: { site?: SiteContent }) {
       </div>
 
       <div className="border-t border-white/10">
-        <p className="mx-auto w-full max-w-6xl px-4 py-5 text-xs text-emerald-100/60 sm:px-6">
-          © {new Date().getFullYear()} {site.legalName}. All rights reserved.
-        </p>
+        <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-4 py-5 sm:px-6">
+          <p className="text-xs text-emerald-100/60">
+            © {new Date().getFullYear()} {site.legalName}. All rights reserved.
+          </p>
+          {isStaff ? (
+            <Link
+              href="/admin"
+              aria-label="관리"
+              title="관리"
+              className="inline-flex size-8 items-center justify-center rounded-full text-emerald-100/40 transition-colors hover:bg-white/10 hover:text-white"
+            >
+              <Settings className="size-4" aria-hidden="true" />
+            </Link>
+          ) : null}
+        </div>
       </div>
     </footer>
   );

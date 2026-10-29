@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, Package, Shield, ShoppingBag, X } from "lucide-react";
+import { Menu, ShoppingBag, X } from "lucide-react";
 import { NAV_ITEMS } from "@/lib/constants";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { SiteLogo } from "@/components/layout/site-logo";
@@ -38,7 +38,7 @@ export function SiteHeader({ auth = EMPTY_AUTH }: { auth?: AuthState }) {
                 href={item.href}
                 aria-current={current ? "page" : undefined}
                 className={cn(
-                  "touch-target inline-flex items-center rounded-full px-3.5 text-[13px] font-medium tracking-tight transition-colors",
+                  "touch-target inline-flex items-center rounded-full px-3.5 text-[13px] font-medium tracking-tight whitespace-nowrap transition-colors",
                   current
                     ? "bg-[#0f4c3a] text-white"
                     : "text-slate-500 hover:bg-slate-100 hover:text-[#0f4c3a]",
@@ -63,19 +63,6 @@ export function SiteHeader({ auth = EMPTY_AUTH }: { auth?: AuthState }) {
               </span>
             ) : null}
           </Link>
-
-          {auth.isStaff ? (
-            <Link
-              href="/admin"
-              className={cn(
-                buttonVariants({ variant: "cta", size: "xl" }),
-                "hidden md:inline-flex",
-              )}
-            >
-              <Shield className="size-4" aria-hidden="true" />
-              관리자 모드
-            </Link>
-          ) : null}
 
           {auth.user ? (
             <div className="hidden items-center gap-1 sm:flex">
@@ -132,26 +119,6 @@ export function SiteHeader({ auth = EMPTY_AUTH }: { auth?: AuthState }) {
               </Link>
             ))}
             <div className="mt-2 flex flex-col gap-2 border-t pt-3">
-              {auth.isStaff ? (
-                <Link
-                  href="/admin"
-                  onClick={close}
-                  className={cn(buttonVariants({ variant: "cta", size: "xl" }), "justify-center")}
-                >
-                  <Shield className="size-4" aria-hidden="true" />
-                  관리자 모드
-                </Link>
-              ) : null}
-              {auth.isStaff ? (
-                <Link
-                  href="/admin/products"
-                  onClick={close}
-                  className={cn(buttonVariants({ variant: "outline", size: "xl" }), "justify-center")}
-                >
-                  <Package className="size-4" aria-hidden="true" />
-                  상품 관리
-                </Link>
-              ) : null}
               {auth.user ? (
                 <>
                   <Link

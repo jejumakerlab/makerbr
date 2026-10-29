@@ -21,7 +21,7 @@ export default async function SiteLayout({ children }: { children: ReactNode }) 
       <main id="main-content" className="flex-1">
         {children}
       </main>
-      <SiteFooter site={site} />
+      <SiteFooter site={site} isStaff={auth.isStaff} />
     </>
   );
 }
