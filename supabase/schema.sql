@@ -145,6 +145,8 @@ create table if not exists public.events (
   updated_at timestamptz not null default now()
 );
 
+-- 교육 준비물(supplies)·신청 회원 연결(user_id)·본인 신청 조회 정책은 applications.sql 에 있습니다.
+-- 이 파일을 다시 실행했다면 applications.sql 도 다시 실행해 submit_application() 을 최신으로 맞춰 주세요.
 create table if not exists public.applications (
   id uuid primary key default gen_random_uuid(),
   event_id uuid not null references public.events (id) on delete cascade,

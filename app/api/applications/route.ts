@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { requireCompleteMember } from "@/lib/auth/member";
 import { createClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 
@@ -25,6 +26,9 @@ export async function POST(request: Request) {
       message: "데모 모드: Supabase 연결 후 실제 정원 체크가 적용됩니다.",
     });
   }
+
+  const member = await requireCompleteMember();
+  if (member.error) return member.error;
 
   const supabase = await createClient();
   if (!supabase) {

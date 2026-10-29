@@ -15,6 +15,9 @@ export type Profile = {
   email: string | null;
   full_name: string | null;
   phone: string | null;
+  zipcode?: string | null;
+  address?: string | null;
+  address_detail?: string | null;
   role: UserRole;
   created_at: string;
   updated_at: string;
@@ -50,6 +53,7 @@ export type EventItem = {
   capacity: number;
   enrolled_count: number;
   fee: number;
+  supplies: string | null;
   cover_image: string | null;
   is_published: boolean;
   created_at: string;
@@ -59,6 +63,7 @@ export type EventItem = {
 export type Application = {
   id: string;
   event_id: string;
+  user_id?: string | null;
   name: string;
   email: string;
   phone: string | null;
@@ -66,6 +71,14 @@ export type Application = {
   message: string | null;
   status: ApplicationStatus;
   created_at: string;
+  updated_at?: string;
+};
+
+export type ApplicationWithEvent = Application & {
+  events: Pick<
+    EventItem,
+    "title" | "slug" | "start_at" | "end_at" | "location" | "fee" | "supplies"
+  > | null;
 };
 
 export type Post = {

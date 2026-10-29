@@ -12,29 +12,12 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useCart } from "@/components/store/cart-provider";
 import { formatKRW } from "@/lib/format";
+import { openPostcodeSearch } from "@/lib/postcode";
 import { LAST_ORDER_STORAGE_KEY, type PlacedOrder } from "@/lib/store/orders";
 import { FREE_SHIPPING_THRESHOLD, shippingFeeFor } from "@/lib/store/shipping";
 import { cn } from "@/lib/utils";
 import type { DeliveryMethod, PaymentMethod } from "@/types/database";
 
-type DaumPostcodeData = {
-  zonecode: string;
-  roadAddress: string;
-  jibunAddress: string;
-  buildingName: string;
-};
-
-declare global {
-  interface Window {
-    daum?: {
-      Postcode: new (options: { oncomplete: (data: DaumPostcodeData) => void }) => {
-        open: () => void;
-      };
-    };
-  }
-}
-
-const POSTCODE_SCRIPT = "https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js";
 const MEMO_PRESETS = [
   "문 앞에 놓아 주세요.",
   "경비실에 맡겨 주세요.",
@@ -42,24 +25,14 @@ const MEMO_PRESETS = [
   "직접 입력",
 ];
 
-function loadPostcodeScript() {
-  return new Promise<void>((resolve, reject) => {
-    if (window.daum?.Postcode) return resolve();
-    const existing = document.querySelector<HTMLScriptElement>(`script[src="${POSTCODE_SCRIPT}"]`);
-    const script = existing ?? document.createElement("script");
-    script.addEventListener("load", () => resolve(), { once: true });
-    script.addEventListener("error", () => reject(new Error("주소 검색을 불러오지 못했습니다.")), {
-      once: true,
-    });
-    if (!existing) {
-      script.src = POSTCODE_SCRIPT;
-      script.async = true;
-      document.head.appendChild(script);
-    }
-  });
-}
-
-export type CheckoutPrefill = { name: string; phone: string; email: string };
+export type CheckoutPrefill = {
+  name: string;
+  phone: string;
+  email: string;
+  zipcode: string;
+  address: string;
+  addressDetail: string;
+};
 
 export function CheckoutForm({
   bank,
@@ -73,13 +46,17 @@ export function CheckoutForm({
   const router = useRouter();
   const { items, subtotal, clear, openCart } = useCart();
 
-  const [buyer, setBuyer] = useState(prefill);
+  const [buyer, setBuyer] = useState({
+    name: prefill.name,
+    phone: prefill.phone,
+    email: prefill.email,
+  });
   const [delivery, setDelivery] = useState<DeliveryMethod>("택배");
   const [sameAsBuyer, setSameAsBuyer] = useState(true);
   const [recipient, setRecipient] = useState({ name: "", phone: "" });
-  const [zipcode, setZipcode] = useState("");
-  const [address, setAddress] = useState("");
-  const [addressDetail, setAddressDetail] = useState("");
+  const [zipcode, setZipcode] = useState(prefill.zipcode);
+  const [address, setAddress] = useState(prefill.address);
+  const [addressDetail, setAddressDetail] = useState(prefill.addressDetail);
   const [memoPreset, setMemoPreset] = useState("");
   const [memoCustom, setMemoCustom] = useState("");
   const [payment, setPayment] = useState<PaymentMethod>("무통장입금/계좌이체");
@@ -99,18 +76,11 @@ export function CheckoutForm({
 
   async function searchAddress() {
     try {
-      await loadPostcodeScript();
-      new window.daum!.Postcode({
-        oncomplete: (data) => {
-          setZipcode(data.zonecode);
-          setAddress(
-            [data.roadAddress || data.jibunAddress, data.buildingName && `(${data.buildingName})`]
-              .filter(Boolean)
-              .join(" "),
-          );
-          document.getElementById("address_detail")?.focus();
-        },
-      }).open();
+      await openPostcodeSearch((result) => {
+        setZipcode(result.zipcode);
+        setAddress(result.address);
+        document.getElementById("address_detail")?.focus();
+      });
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "주소 검색을 열지 못했습니다.");
     }

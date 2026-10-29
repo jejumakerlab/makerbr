@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Image from "next/image";
+import { getAuthState } from "@/lib/auth/session";
 import { getEventBySlug, getPublishedEventSlugs } from "@/lib/data/queries";
 import { EVENT_CATEGORIES } from "@/lib/constants";
 import { formatDateTime, formatKRW, remainingSeats } from "@/lib/format";
@@ -18,7 +19,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function EventDetailPage({ params }: Props) {
   const { slug } = await params;
-  const event = await getEventBySlug(slug);
+  const [event, auth] = await Promise.all([getEventBySlug(slug), getAuthState()]);
   if (!event) notFound();
 
   const remain = remainingSeats(event.capacity, event.enrolled_count);
@@ -59,8 +60,35 @@ export default async function EventDetailPage({ params }: Props) {
       <p className="mt-2 font-medium">
         {event.fee === 0 ? "참가비 무료" : `참가비 ${formatKRW(event.fee)}`}
       </p>
+      {event.supplies ? (
+        <section
+          aria-labelledby="supplies-heading"
+          className="mt-6 rounded-2xl border border-emerald-100 bg-emerald-50/60 px-5 py-4"
+        >
+          <h2 id="supplies-heading" className="text-sm font-semibold text-[#0f4c3a]">
+            준비물
+          </h2>
+          <p className="mt-1.5 text-sm leading-7 break-keep whitespace-pre-line">{event.supplies}</p>
+        </section>
+      ) : null}
       <p className="mt-6 leading-8">{event.description}</p>
-      <EventApplyForm eventId={event.id} isFull={remain === 0} />
+      <EventApplyForm
+        eventId={event.id}
+        isFull={remain === 0}
+        access={
+          !auth.user
+            ? "guest"
+            : auth.profileComplete || auth.isStaff
+              ? "member"
+              : "incomplete"
+        }
+        redirectPath={`/events/${event.slug}`}
+        defaults={{
+          name: auth.profile?.full_name ?? "",
+          email: auth.user?.email ?? "",
+          phone: auth.profile?.phone ?? "",
+        }}
+      />
     </article>
   );
 }

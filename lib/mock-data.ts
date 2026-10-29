@@ -119,6 +119,7 @@ export const MOCK_EVENTS: EventItem[] = [
     capacity: 12,
     enrolled_count: 7,
     fee: 30000,
+    supplies: "편한 복장, 필기구 (보안경·재료는 현장에서 제공)",
     cover_image:
       "https://images.unsplash.com/photo-1581090464777-f3220bbe1b8b?w=1400",
     is_published: true,
@@ -138,6 +139,7 @@ export const MOCK_EVENTS: EventItem[] = [
     capacity: 24,
     enrolled_count: 24,
     fee: 0,
+    supplies: null,
     cover_image:
       "https://images.unsplash.com/photo-1509062522246-3755977927d7?w=1400",
     is_published: true,

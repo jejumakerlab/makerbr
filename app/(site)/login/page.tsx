@@ -26,7 +26,7 @@ export default async function LoginPage({
   return (
     <AuthCard
       title="로그인"
-      description="이메일과 비밀번호로 메이커브릿지에 로그인하세요."
+      description="교육 신청과 상품 구매는 회원만 이용할 수 있어요. 소셜 계정이나 이메일로 로그인하세요."
     >
       <Suspense>
         <LoginForm />

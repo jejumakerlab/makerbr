@@ -2,8 +2,9 @@
 
 import { useState, type FormEvent } from "react";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
+import { SocialLoginButtons } from "@/components/auth/social-login-buttons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,7 +12,6 @@ import { createClient } from "@/lib/supabase/client";
 import { safeRedirectPath } from "@/lib/auth/paths";
 
 export function LoginForm() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const [pending, setPending] = useState(false);
   const redirectTo = safeRedirectPath(searchParams.get("redirect"));
@@ -30,9 +30,9 @@ export function LoginForm() {
 
     setPending(true);
     const { error } = await supabase.auth.signInWithPassword({ email, password });
-    setPending(false);
 
     if (error) {
+      setPending(false);
       toast.error(
         error.message === "Invalid login credentials"
           ? "이메일 또는 비밀번호가 올바르지 않습니다."
@@ -42,11 +42,14 @@ export function LoginForm() {
     }
 
     toast.success("로그인했습니다.");
-    router.push(redirectTo);
-    router.refresh();
+    // /auth/callback 은 페이지가 아닌 라우트 핸들러라 전체 이동으로 보내야 리다이렉트가 따라갑니다.
+    // eslint-disable-next-line @next/next/no-location-assign-relative-destination
+    window.location.assign(`/auth/callback?redirect=${encodeURIComponent(redirectTo)}`);
   }
 
   return (
+    <>
+    <SocialLoginButtons redirectTo={redirectTo} />
     <form onSubmit={onSubmit} className="mt-6 grid gap-4">
       <div className="grid gap-2">
         <Label htmlFor="email">이메일</Label>
@@ -83,5 +86,6 @@ export function LoginForm() {
         </Link>
       </p>
     </form>
+    </>
   );
 }

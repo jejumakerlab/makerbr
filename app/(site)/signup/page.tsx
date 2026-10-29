@@ -26,7 +26,7 @@ export default async function SignupPage({
   return (
     <AuthCard
       title="회원가입"
-      description="이름, 연락처, 이메일로 계정을 만들고 교육·스토어를 이용하세요."
+      description="소셜 계정으로 간편하게 가입하거나, 이름·휴대전화·주소·이메일을 입력해 가입하세요."
     >
       <Suspense>
         <SignupForm />

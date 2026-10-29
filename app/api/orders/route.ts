@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { requireCompleteMember } from "@/lib/auth/member";
 import { createClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { shippingFeeFor } from "@/lib/store/shipping";
@@ -52,6 +53,9 @@ export async function POST(request: Request) {
       },
     });
   }
+
+  const member = await requireCompleteMember();
+  if (member.error) return member.error;
 
   // 로그인 세션을 그대로 넘겨야 place_order() 안에서 auth.uid() 로 회원 주문이 연결됩니다.
   const supabase = await createClient();
