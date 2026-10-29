@@ -17,7 +17,7 @@ export default function CartPage() {
       ) : (
         <ul className="mt-8 divide-y rounded-2xl border">
           {items.map((item) => {
-            const price = item.product.sale_price ?? item.product.price;
+            const price = item.product.price;
             return (
               <li key={item.product.id} className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center">
                 <div className="flex-1">

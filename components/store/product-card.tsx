@@ -2,20 +2,24 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Product } from "@/types/database";
 import { formatKRW } from "@/lib/format";
-import { PRODUCT_CATEGORIES } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
+/** 판매가보다 높은 정가가 있을 때만 취소선으로 보여줄 금액 */
+export function strikePrice(product: Product) {
+  return product.original_price != null && product.original_price > product.price
+    ? product.original_price
+    : null;
+}
+
 export function ProductCard({ product }: { product: Product }) {
-  const price = product.sale_price ?? product.price;
-  const category =
-    PRODUCT_CATEGORIES.find((item) => item.value === product.category)?.label ??
-    product.category;
-  const image = product.images[0];
+  const image = product.thumbnail_url;
+  const originalPrice = strikePrice(product);
+  const soldOut = product.stock <= 0;
 
   return (
     <article className="bg-card group overflow-hidden rounded-2xl border">
       <Link
-        href={`/store/${product.slug}`}
+        href={`/store/${product.id}`}
         className="block focus-visible:outline-2 focus-visible:outline-offset-2"
       >
         <div className="bg-muted relative aspect-[4/3] overflow-hidden">
@@ -32,18 +36,23 @@ export function ProductCard({ product }: { product: Product }) {
               이미지 준비 중
             </div>
           )}
+          {soldOut ? (
+            <span className="absolute top-3 left-3 rounded-full bg-slate-900/80 px-3 py-1 text-xs font-semibold text-white">
+              품절
+            </span>
+          ) : null}
         </div>
         <div className="p-4">
           <p className="text-primary text-xs font-semibold tracking-wide uppercase">
-            {category}
+            {product.category}
             {product.maker_name ? ` · ${product.maker_name}` : ""}
           </p>
           <h3 className="mt-1 text-lg font-semibold">{product.name}</h3>
           <p className="mt-3 flex items-baseline gap-2">
-            <span className="text-lg font-semibold">{formatKRW(price)}</span>
-            {product.sale_price ? (
+            <span className="text-lg font-semibold">{formatKRW(product.price)}</span>
+            {originalPrice ? (
               <span className="text-muted-foreground text-sm line-through">
-                {formatKRW(product.price)}
+                {formatKRW(originalPrice)}
               </span>
             ) : null}
           </p>

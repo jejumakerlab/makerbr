@@ -24,7 +24,8 @@ type CartState = {
   total: number;
 };
 
-const STORAGE_KEY = "makerbridge-cart";
+// 상품 구조(가격 컬럼 등)가 바뀌면 키 버전을 올려 이전 장바구니를 비웁니다.
+const STORAGE_KEY = "makerbridge-cart-v2";
 const EMPTY_CART: CartItem[] = [];
 
 let snapshot: CartItem[] = EMPTY_CART;
@@ -149,8 +150,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     const clear = () => writeCart(EMPTY_CART);
     const count = items.reduce((sum, item) => sum + item.quantity, 0);
     const total = items.reduce((sum, item) => {
-      const price = item.product.sale_price ?? item.product.price;
-      return sum + price * item.quantity;
+      return sum + item.product.price * item.quantity;
     }, 0);
 
     return { items, add, remove, setQuantity, clear, count, total };

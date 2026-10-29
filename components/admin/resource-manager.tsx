@@ -227,7 +227,7 @@ function ResourceForm({
         </h2>
         <div className="mt-5 grid max-h-[70vh] gap-4 overflow-y-auto pr-1">
           {config.fields.map((field) => {
-            const value = initial?.[field.name];
+            const value = initial ? initial[field.name] : field.defaultValue;
             return (
               <div key={field.name} className="grid gap-2">
                 <Label htmlFor={field.name}>

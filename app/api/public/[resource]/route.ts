@@ -25,7 +25,9 @@ export async function GET(_request: Request, context: Ctx) {
   }
 
   let query = supabase.from(name).select("*");
-  if (["products", "events", "posts", "portfolios"].includes(name)) {
+  if (name === "products") {
+    query = query.eq("is_visible", true);
+  } else if (["events", "posts", "portfolios"].includes(name)) {
     query = query.eq("is_published", true);
   }
 

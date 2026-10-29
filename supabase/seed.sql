@@ -22,33 +22,39 @@ insert into public.site_settings (key, value) values
   ('mail_order_number', '제 2026-제주아라-0104호')
 on conflict (key) do update set value = excluded.value;
 
-insert into public.products (name, slug, description, price, sale_price, category, images, stock, is_published, maker_name, tags, sort_order)
+insert into public.products (
+  id, category, maker_name, name, price, original_price,
+  thumbnail_url, summary, description, stock, is_visible, created_at
+)
 values
   (
-    '현무암 텍스처 코스터 세트',
-    'basalt-coaster-set',
+    '6f1c2a10-0000-4000-8000-000000000001',
+    '업사이클', '메이커브릿지', '현무암 텍스처 코스터 세트',
+    24000, 28000,
+    'https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=1200',
+    '제주 현무암 질감을 살린 업사이클 코스터 4p',
     '제주 현무암의 질감을 살린 업사이클 코스터 4p 세트입니다. 레이저 커팅과 수마감으로 제작합니다.',
-    28000, 24000, 'upcycled',
-    '["https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=1200"]'::jsonb,
-    40, true, '메이커브릿지', array['업사이클','리빙','제주'], 1
+    40, true, '2026-07-01 00:03:00+09'
   ),
   (
-    '틴커캐드 메이커 키트',
-    'tinkercad-maker-kit',
+    '6f1c2a10-0000-4000-8000-000000000002',
+    '교육 키트', '메이커브릿지 교육팀', '틴커캐드 메이커 키트',
+    45000, null,
+    'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=1200',
+    '초등·중등 3D 모델링 입문 키트',
     '초등·중등 대상 3D 모델링 입문 키트. 교안, 연습 파일, 출력용 필라멘트를 포함합니다.',
-    45000, null, 'education',
-    '["https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=1200"]'::jsonb,
-    25, true, '메이커브릿지 교육팀', array['교육','3D프린팅'], 2
+    25, true, '2026-07-01 00:02:00+09'
   ),
   (
-    '로컬 메이커 우드브로치',
-    'local-wood-brooch',
+    '6f1c2a10-0000-4000-8000-000000000003',
+    '메이커 협업', '한라공방', '로컬 메이커 우드브로치',
+    18000, null,
+    'https://images.unsplash.com/photo-1452860606245-08befc0ff44b?w=1200',
+    '제주 목재 자투리로 만든 한정 브로치',
     '제주 목재 자투리를 활용한 한정 브로치. 지역 메이커와 협업 제작합니다.',
-    18000, null, 'maker',
-    '["https://images.unsplash.com/photo-1452860606245-08befc0ff44b?w=1200"]'::jsonb,
-    15, true, '한라공방', array['협업','패션'], 3
+    15, true, '2026-07-01 00:01:00+09'
   )
-on conflict (slug) do nothing;
+on conflict (id) do nothing;
 
 insert into public.events (title, slug, description, category, location, start_at, end_at, capacity, fee, cover_image, is_published)
 values

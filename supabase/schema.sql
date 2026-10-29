@@ -109,21 +109,19 @@ for each row execute function public.handle_new_user();
 -- ---------------------------------------------------------------------------
 create table if not exists public.products (
   id uuid primary key default gen_random_uuid(),
+  category text not null
+    check (category in ('자체 상품', '메이커 협업', '업사이클', '교육 키트')),
+  maker_name text not null,
   name text not null,
-  slug text not null unique,
+  price integer not null check (price >= 0),
+  original_price integer check (original_price is null or original_price >= 0),
+  thumbnail_url text not null,
+  detail_images text[],
+  summary text,
   description text,
-  price integer not null default 0 check (price >= 0),
-  sale_price integer check (sale_price is null or sale_price >= 0),
-  category text not null default 'goods'
-    check (category in ('goods', 'maker', 'upcycled', 'education')),
-  images jsonb not null default '[]'::jsonb,
-  stock integer not null default 0 check (stock >= 0),
-  is_published boolean not null default false,
-  maker_name text,
-  tags text[] not null default '{}',
-  sort_order integer not null default 0,
-  created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now()
+  stock integer not null default 99 check (stock >= 0),
+  is_visible boolean not null default true,
+  created_at timestamptz not null default now()
 );
 
 create table if not exists public.events (
@@ -279,7 +277,7 @@ declare
   t text;
 begin
   foreach t in array array[
-    'products', 'events', 'posts', 'quotes', 'impacts',
+    'events', 'posts', 'quotes', 'impacts',
     'portfolios', 'orders', 'site_settings'
   ]
   loop
@@ -292,7 +290,7 @@ begin
   end loop;
 end $$;
 
-create index if not exists products_published_idx on public.products (is_published, sort_order);
+create index if not exists products_visible_idx on public.products (is_visible, created_at desc);
 create index if not exists events_published_idx on public.events (is_published, start_at);
 create index if not exists applications_event_idx on public.applications (event_id, status);
 create index if not exists posts_type_idx on public.posts (type, is_published, pinned desc, created_at desc);
@@ -373,6 +371,16 @@ insert into storage.buckets (id, name, public)
 values ('media', 'media', true)
 on conflict (id) do nothing;
 
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+values (
+  'product-images',
+  'product-images',
+  true,
+  5242880,
+  array['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/avif']
+)
+on conflict (id) do nothing;
+
 -- ---------------------------------------------------------------------------
 -- 5) RLS policies
 -- ---------------------------------------------------------------------------
@@ -409,7 +417,7 @@ for all using (public.is_staff()) with check (public.is_staff());
 
 drop policy if exists "products_public_read" on public.products;
 create policy "products_public_read" on public.products
-for select using (is_published = true or public.is_staff());
+for select using (is_visible = true or public.is_staff());
 
 drop policy if exists "events_public_read" on public.events;
 create policy "events_public_read" on public.events
@@ -473,3 +481,23 @@ drop policy if exists "media_staff_write" on storage.objects;
 create policy "media_staff_write" on storage.objects
 for all using (bucket_id = 'media' and public.is_staff())
 with check (bucket_id = 'media' and public.is_staff());
+
+drop policy if exists "product_images_public_read" on storage.objects;
+create policy "product_images_public_read" on storage.objects
+for select using (bucket_id = 'product-images');
+
+drop policy if exists "product_images_staff_insert" on storage.objects;
+create policy "product_images_staff_insert" on storage.objects
+for insert to authenticated
+with check (bucket_id = 'product-images' and public.is_staff());
+
+drop policy if exists "product_images_staff_update" on storage.objects;
+create policy "product_images_staff_update" on storage.objects
+for update to authenticated
+using (bucket_id = 'product-images' and public.is_staff())
+with check (bucket_id = 'product-images' and public.is_staff());
+
+drop policy if exists "product_images_staff_delete" on storage.objects;
+create policy "product_images_staff_delete" on storage.objects
+for delete to authenticated
+using (bucket_id = 'product-images' and public.is_staff());

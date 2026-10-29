@@ -16,6 +16,8 @@ export type AdminField = {
   type: FieldType;
   required?: boolean;
   options?: { value: string; label: string }[];
+  /** 새 항목 추가 폼의 초기값 */
+  defaultValue?: string | number | boolean;
 };
 
 export type AdminResourceConfig = {
@@ -31,27 +33,28 @@ export const ADMIN_RESOURCES: Record<AdminResourceName, AdminResourceConfig> = {
     label: "상품",
     description: "메이커 스토어 상품을 등록·수정합니다.",
     fields: [
-      { name: "name", label: "상품명", type: "text", required: true },
-      { name: "slug", label: "슬러그", type: "text", required: true },
-      { name: "description", label: "설명", type: "textarea" },
-      { name: "price", label: "정가(원)", type: "number", required: true },
-      { name: "sale_price", label: "할인가(원)", type: "number" },
       {
         name: "category",
         label: "카테고리",
         type: "select",
         required: true,
         options: [
-          { value: "goods", label: "자체 상품" },
-          { value: "maker", label: "메이커 협업" },
-          { value: "upcycled", label: "업사이클" },
-          { value: "education", label: "교육 키트" },
+          { value: "자체 상품", label: "자체 상품" },
+          { value: "메이커 협업", label: "메이커 협업" },
+          { value: "업사이클", label: "업사이클" },
+          { value: "교육 키트", label: "교육 키트" },
         ],
       },
-      { name: "images", label: "이미지 URL JSON", type: "json" },
-      { name: "stock", label: "재고", type: "number" },
-      { name: "maker_name", label: "메이커/브랜드", type: "text" },
-      { name: "is_published", label: "공개", type: "checkbox" },
+      { name: "maker_name", label: "메이커/브랜드", type: "text", required: true },
+      { name: "name", label: "상품명", type: "text", required: true },
+      { name: "price", label: "판매가(원)", type: "number", required: true },
+      { name: "original_price", label: "정가(원, 할인 시)", type: "number" },
+      { name: "thumbnail_url", label: "대표 이미지 URL", type: "text", required: true },
+      { name: "detail_images", label: "상세 이미지 URL 목록(JSON 배열)", type: "json" },
+      { name: "summary", label: "한 줄 소개", type: "text" },
+      { name: "description", label: "상세 설명", type: "textarea" },
+      { name: "stock", label: "재고", type: "number", required: true, defaultValue: 99 },
+      { name: "is_visible", label: "스토어 노출", type: "checkbox", defaultValue: true },
     ],
   },
   events: {

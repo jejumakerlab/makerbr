@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { PageHero } from "@/components/layout/page-hero";
-import { ProductGrid } from "@/components/store/product-card";
-import { FilterChips } from "@/components/shared/filter-chips";
-import { PRODUCT_CATEGORIES } from "@/lib/constants";
+import { StoreCatalog } from "@/components/store/store-catalog";
 import { getProducts } from "@/lib/data/queries";
 
 export const metadata: Metadata = {
@@ -16,7 +14,7 @@ export default async function StorePage({
   searchParams: Promise<{ category?: string }>;
 }) {
   const { category = "all" } = await searchParams;
-  const products = await getProducts(category);
+  const products = await getProducts();
 
   return (
     <>
@@ -26,12 +24,7 @@ export default async function StorePage({
         description="업사이클 리빙, 교육 키트, 지역 메이커 협업 상품을 만나보세요."
       />
       <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6">
-        <FilterChips
-          options={PRODUCT_CATEGORIES}
-          selected={category}
-          basePath="/store"
-        />
-        <ProductGrid products={products} />
+        <StoreCatalog products={products} initialCategory={category} />
       </div>
     </>
   );

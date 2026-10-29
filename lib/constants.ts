@@ -144,6 +144,7 @@ export const ADMIN_NAV = [
   { href: "/admin/inquiries", label: "고객 문의", resource: "inquiries" },
 ] as const;
 
+/** value는 URL(?category=)용, label은 DB products.category에 저장되는 값 */
 export const PRODUCT_CATEGORIES = [
   { value: "all", label: "전체" },
   { value: "goods", label: "자체 상품" },

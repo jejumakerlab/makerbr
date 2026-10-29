@@ -103,52 +103,38 @@ export async function getImpacts() {
   });
 }
 
-export async function getProducts(category?: string) {
-  const products = await fromTable<Product>("products", MOCK_PRODUCTS, async (supabase) => {
+export async function getProducts() {
+  return fromTable<Product>("products", MOCK_PRODUCTS, async (supabase) => {
     const { data, error } = await supabase
       .from("products")
       .select("*")
-      .eq("is_published", true)
-      .order("sort_order", { ascending: true });
-
-    if (error) return { data: null, error };
-
-    return {
-      data: (data ?? []).map((row) => ({
-        ...row,
-        images: Array.isArray(row.images) ? row.images : [],
-      })) as Product[],
-      error: null,
-    };
+      .eq("is_visible", true)
+      .order("created_at", { ascending: false });
+    return { data: data as Product[] | null, error };
   });
-
-  if (category && category !== "all") {
-    return products.filter((item) => item.category === category);
-  }
-  return products;
 }
 
-export async function getProductBySlug(slug: string) {
+export async function getProductById(id: string) {
   const products = await getProducts();
-  return products.find((item) => item.slug === slug) ?? null;
+  return products.find((item) => item.id === id) ?? null;
 }
 
 /** generateStaticParams 전용. 빌드 시점이므로 connection()을 호출하지 않습니다. */
-export async function getPublishedProductSlugs() {
-  const rows = await fromTable<{ slug: string }>(
+export async function getVisibleProductIds() {
+  const rows = await fromTable<{ id: string }>(
     "products",
-    MOCK_PRODUCTS.map((item) => ({ slug: item.slug })),
+    MOCK_PRODUCTS.map((item) => ({ id: item.id })),
     async (supabase) => {
       const { data, error } = await supabase
         .from("products")
-        .select("slug")
-        .eq("is_published", true);
-      return { data: data as { slug: string }[] | null, error };
+        .select("id")
+        .eq("is_visible", true);
+      return { data: data as { id: string }[] | null, error };
     },
     { waitForRequest: false },
   );
 
-  return rows.map((item) => item.slug).filter(Boolean);
+  return rows.map((item) => item.id);
 }
 
 export async function getEvents(category?: string) {

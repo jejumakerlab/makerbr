@@ -1,6 +1,6 @@
 export type UserRole = "user" | "staff" | "admin";
 
-export type ProductCategory = "goods" | "maker" | "upcycled" | "education";
+export type ProductCategory = "자체 상품" | "메이커 협업" | "업사이클" | "교육 키트";
 export type EventCategory = "workshop" | "education" | "outreach" | "exhibition";
 export type PostType = "notice" | "story" | "faq";
 export type ApplicationStatus = "pending" | "confirmed" | "cancelled" | "waitlist";
@@ -27,20 +27,20 @@ export type Profile = {
 
 export type Product = {
   id: string;
-  name: string;
-  slug: string;
-  description: string | null;
-  price: number;
-  sale_price: number | null;
   category: ProductCategory;
-  images: string[];
+  maker_name: string;
+  name: string;
+  /** 실제 판매가 */
+  price: number;
+  /** 할인 전 정가. 값이 있으면 취소선으로 표시 */
+  original_price: number | null;
+  thumbnail_url: string;
+  detail_images: string[] | null;
+  summary: string | null;
+  description: string | null;
   stock: number;
-  is_published: boolean;
-  maker_name: string | null;
-  tags: string[];
-  sort_order: number;
+  is_visible: boolean;
   created_at: string;
-  updated_at: string;
 };
 
 export type EventItem = {
