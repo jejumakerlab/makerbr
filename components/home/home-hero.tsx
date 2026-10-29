@@ -1,5 +1,7 @@
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, GraduationCap, Leaf, Sparkles, Wrench } from "lucide-react";
+import heroBg from "@/images/hero-bg.png";
 import { SITE } from "@/lib/constants";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -50,21 +52,26 @@ export function HomeHero({
   return (
     <section
       aria-labelledby="hero-heading"
-      className="bg-mesh relative overflow-hidden"
+      className="relative overflow-hidden bg-[#F4F9F6]"
     >
-      <div aria-hidden="true" className="bg-dot-grid pointer-events-none absolute inset-0 opacity-70" />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -top-24 left-1/4 size-72 rounded-full bg-emerald-300/25 blur-3xl"
+      <Image
+        src={heroBg}
+        alt=""
+        fill
+        preload
+        placeholder="blur"
+        sizes="100vw"
+        className="pointer-events-none object-cover object-[70%_center] lg:object-right"
       />
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[#F4F9F6]/85 lg:hidden" />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute right-0 bottom-0 size-96 rounded-full bg-teal-800/10 blur-3xl"
+        className="pointer-events-none absolute inset-0 hidden bg-linear-to-r from-[#F4F9F6]/95 via-[#F4F9F6]/75 to-[#F4F9F6]/25 lg:block"
       />
 
       <div className="relative mx-auto grid w-full max-w-6xl items-center gap-12 px-4 py-16 sm:px-6 sm:py-24 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16 lg:py-28">
         <div>
-          <p className="inline-flex items-center gap-2 rounded-full border border-emerald-200/80 bg-white/70 px-3 py-1 text-xs font-medium tracking-wide text-[#134e4a] shadow-sm backdrop-blur-md">
+          <p className="inline-flex items-center gap-2 rounded-full border border-emerald-900/10 bg-white/85 px-3 py-1 text-xs font-medium tracking-wide text-[#134e4a] shadow-sm backdrop-blur-sm">
             <Sparkles className="size-3.5 text-emerald-500" aria-hidden="true" />
             제주 메이커 · 로컬 제작
           </p>
@@ -103,7 +110,7 @@ export function HomeHero({
               href="/store"
               className={cn(
                 buttonVariants({ variant: "outline", size: "xl" }),
-                "rounded-full bg-white/70 px-6 backdrop-blur-md",
+                "rounded-full border border-emerald-900/10 bg-white/85 px-6 backdrop-blur-sm",
               )}
             >
               메이커 스토어
@@ -120,7 +127,8 @@ export function HomeHero({
                 <li
                   key={item.step}
                   className={cn(
-                    "glass-panel rounded-3xl p-5 transition-transform duration-300 hover:-translate-y-1",
+                    "rounded-3xl border border-white/60 bg-white/85 p-5 shadow-[0_8px_30px_rgb(0,0,0,0.06)] backdrop-blur-md",
+                    "transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/95",
                     "lg:absolute lg:w-[86%]",
                     index === 0 && "lg:top-0 lg:left-0 lg:rotate-[-3deg]",
                     index === 1 && "lg:top-[118px] lg:left-[8%] lg:rotate-[1.5deg]",
