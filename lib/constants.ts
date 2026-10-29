@@ -4,6 +4,8 @@ export const SITE = {
   slogan: "만드는 사람과 세상을 잇다",
   description:
     "제주 기반 메이커브릿지. 메이커 교육, 로컬 제작, 친환경 스토어와 공공 협업을 한곳에서 연결합니다.",
+  impactDescription:
+    "교육, 친환경 순환, 지역 협업으로 쌓아 온 숫자입니다. 관리자 페이지에서 수시로 갱신할 수 있습니다.",
   legalName: "주식회사 메이커브릿지",
   email: "makerbr@naver.com",
   phone: "064-725-6728",
@@ -28,6 +30,7 @@ export type SiteContent = {
   nameEn: string;
   slogan: string;
   description: string;
+  impactDescription: string;
   legalName: string;
   email: string;
   phone: string;
@@ -81,6 +84,7 @@ export function mergeSiteSettings(
     nameEn: map.name_en ?? SITE.nameEn,
     slogan: map.slogan ?? SITE.slogan,
     description: map.hero_sub ?? map.description ?? SITE.description,
+    impactDescription: map.impact_description ?? SITE.impactDescription,
     legalName: map.legal_name ?? SITE.legalName,
     email: settingOrDefault(map.email, SITE.email),
     phone,

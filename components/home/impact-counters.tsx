@@ -1,7 +1,14 @@
 import type { Impact } from "@/types/database";
+import { SITE } from "@/lib/constants";
 import { formatNumber } from "@/lib/format";
 
-export function ImpactCounters({ items }: { items: Impact[] }) {
+export function ImpactCounters({
+  items,
+  description = SITE.impactDescription,
+}: {
+  items: Impact[];
+  description?: string;
+}) {
   return (
     <section
       aria-labelledby="impact-heading"
@@ -18,8 +25,8 @@ export function ImpactCounters({ items }: { items: Impact[] }) {
         <h2 id="impact-heading" className="mt-2 text-2xl font-semibold tracking-tight text-white sm:text-3xl">
           사회적 가치 성과
         </h2>
-        <p className="mt-2 max-w-2xl text-sm leading-7 text-emerald-50/80">
-          교육, 친환경 순환, 지역 협업으로 쌓아 온 숫자입니다. 관리자 페이지에서 수시로 갱신할 수 있습니다.
+        <p className="mt-2 max-w-2xl text-sm leading-7 break-keep whitespace-pre-line text-emerald-50/80">
+          {description}
         </p>
         <ul className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {items.map((item) => {

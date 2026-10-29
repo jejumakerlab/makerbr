@@ -21,7 +21,7 @@ export default async function HomePage() {
   return (
     <>
       <HomeHero slogan={site.slogan} description={site.description} />
-      <ImpactCounters items={impacts} />
+      <ImpactCounters items={impacts} description={site.impactDescription} />
 
       <section
         aria-labelledby="store-highlight-heading"

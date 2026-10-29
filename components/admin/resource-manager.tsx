@@ -1,6 +1,13 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  type FormEvent,
+  type ReactNode,
+} from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,7 +25,13 @@ import type { AdminResourceConfig } from "@/lib/admin/resources";
 
 type Row = Record<string, unknown> & { id: string };
 
-export function ResourceManager({ config }: { config: AdminResourceConfig }) {
+export function ResourceManager({
+  config,
+  intro,
+}: {
+  config: AdminResourceConfig;
+  intro?: ReactNode;
+}) {
   const [rows, setRows] = useState<Row[]>([]);
   const [demo, setDemo] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -66,6 +79,8 @@ export function ResourceManager({ config }: { config: AdminResourceConfig }) {
           데모 모드입니다. `.env.local`에 Supabase 키를 넣으면 실제 DB에 저장됩니다.
         </p>
       ) : null}
+
+      {intro}
 
       <div className="bg-card mt-6 overflow-hidden rounded-xl border">
         <Table>
