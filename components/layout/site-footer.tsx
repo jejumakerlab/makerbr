@@ -182,9 +182,20 @@ export function SiteFooter({
 
       <div className="border-t border-white/10">
         <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-4 py-5 sm:px-6">
-          <p className="text-xs text-emerald-100/60">
-            © {new Date().getFullYear()} {site.legalName}. All rights reserved.
-          </p>
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs">
+            <Link href="/terms" className="text-emerald-50/80 hover:text-white hover:underline">
+              이용약관
+            </Link>
+            <Link
+              href="/privacy"
+              className="font-semibold text-white hover:underline"
+            >
+              개인정보처리방침
+            </Link>
+            <p className="text-emerald-100/60">
+              © {new Date().getFullYear()} {site.legalName}. All rights reserved.
+            </p>
+          </div>
           {isStaff ? (
             <Link
               href="/admin"

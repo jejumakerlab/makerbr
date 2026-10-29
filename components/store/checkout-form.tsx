@@ -559,7 +559,15 @@ export function CheckoutForm({
               className="accent-primary mt-0.5 size-4"
             />
             <span>
-              주문 상품·금액을 확인했으며, 주문 처리를 위한 개인정보 수집·이용에 동의합니다.
+              주문 상품·금액을 확인했으며,{" "}
+              <Link href="/terms" target="_blank" className="underline underline-offset-4">
+                이용약관
+              </Link>
+              과 주문 처리를 위한{" "}
+              <Link href="/privacy" target="_blank" className="underline underline-offset-4">
+                개인정보 수집·이용 및 배송업체 제공
+              </Link>
+              에 동의합니다.
             </span>
           </label>
           <Button

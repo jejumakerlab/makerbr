@@ -128,6 +128,29 @@ export function SignupForm() {
         />
         <p className="text-muted-foreground text-xs">8자 이상 입력해 주세요.</p>
       </div>
+      <fieldset className="grid gap-2 rounded-xl border border-slate-200 px-4 py-3 text-sm">
+        <legend className="px-1 text-xs font-medium text-slate-500">약관 동의</legend>
+        <label className="flex items-start gap-2">
+          <input type="checkbox" name="agree_terms" required className="accent-primary mt-0.5 size-4" />
+          <span>
+            (필수){" "}
+            <Link href="/terms" target="_blank" className="font-medium underline underline-offset-4">
+              이용약관
+            </Link>
+            에 동의합니다.
+          </span>
+        </label>
+        <label className="flex items-start gap-2">
+          <input type="checkbox" name="agree_privacy" required className="accent-primary mt-0.5 size-4" />
+          <span>
+            (필수){" "}
+            <Link href="/privacy" target="_blank" className="font-medium underline underline-offset-4">
+              개인정보 수집·이용
+            </Link>
+            에 동의합니다. (이름, 연락처, 이메일 · 회원 탈퇴 시까지 보관)
+          </span>
+        </label>
+      </fieldset>
       <Button type="submit" size="xl" disabled={pending}>
         {pending ? "가입 중..." : "회원가입"}
       </Button>
