@@ -82,7 +82,10 @@ security definer
 set search_path = public
 as $$
 begin
-  if new.role is distinct from old.role and not public.is_staff() then
+  -- auth.uid() 가 없는 경우(SQL Editor·서버 관리 작업)는 막지 않습니다.
+  if new.role is distinct from old.role
+     and auth.uid() is not null
+     and not public.is_staff() then
     raise exception '역할을 변경할 권한이 없습니다.';
   end if;
   return new;
