@@ -4,28 +4,39 @@ import {
   createContext,
   useContext,
   useMemo,
+  useState,
   useSyncExternalStore,
   type ReactNode,
 } from "react";
 import type { Product } from "@/types/database";
+import { shippingFeeFor } from "@/lib/store/shipping";
 
 export type CartItem = {
+  /** 같은 상품이라도 요청사항(memo)이 다르면 별도 줄로 담습니다. */
+  key: string;
   product: Product;
   quantity: number;
+  memo: string;
 };
 
 type CartState = {
   items: CartItem[];
-  add: (product: Product, quantity?: number) => void;
-  remove: (productId: string) => void;
-  setQuantity: (productId: string, quantity: number) => void;
+  add: (product: Product, quantity?: number, memo?: string) => void;
+  remove: (key: string) => void;
+  setQuantity: (key: string, quantity: number) => void;
   clear: () => void;
   count: number;
+  subtotal: number;
+  shippingFee: number;
   total: number;
+  isOpen: boolean;
+  openCart: () => void;
+  closeCart: () => void;
+  setOpen: (open: boolean) => void;
 };
 
-// 상품 구조(가격 컬럼 등)가 바뀌면 키 버전을 올려 이전 장바구니를 비웁니다.
-const STORAGE_KEY = "makerbridge-cart-v2";
+// 상품·장바구니 구조가 바뀌면 키 버전을 올려 이전 장바구니를 비웁니다.
+const STORAGE_KEY = "makerbridge-cart-v3";
 const EMPTY_CART: CartItem[] = [];
 
 let snapshot: CartItem[] = EMPTY_CART;
@@ -37,6 +48,17 @@ function emit() {
   listeners.forEach((listener) => listener());
 }
 
+export function cartKey(productId: string, memo: string) {
+  return `${productId}::${memo.trim()}`;
+}
+
+/** 재고를 넘지 않는 1 이상의 수량 */
+export function clampQuantity(quantity: number, stock: number) {
+  const max = Math.max(stock, 1);
+  if (!Number.isFinite(quantity)) return 1;
+  return Math.min(Math.max(Math.floor(quantity), 1), max);
+}
+
 function parseCart(raw: string | null): CartItem[] {
   if (!raw) return EMPTY_CART;
   try {
@@ -46,8 +68,10 @@ function parseCart(raw: string | null): CartItem[] {
       (item) =>
         item &&
         typeof item === "object" &&
+        typeof item.key === "string" &&
         item.product &&
         typeof item.product.id === "string" &&
+        typeof item.product.price === "number" &&
         Number.isFinite(item.quantity) &&
         item.quantity > 0,
     );
@@ -116,45 +140,75 @@ const CartContext = createContext<CartState | null>(null);
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const items = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+  const [isOpen, setOpen] = useState(false);
 
   const value = useMemo<CartState>(() => {
-    const add = (product: Product, quantity = 1) => {
+    const add = (product: Product, quantity = 1, memo = "") => {
+      const trimmedMemo = memo.trim();
+      const key = cartKey(product.id, trimmedMemo);
       const current = getSnapshot();
-      const existing = current.find((item) => item.product.id === product.id);
+      const existing = current.find((item) => item.key === key);
       const next = existing
         ? current.map((item) =>
-            item.product.id === product.id
-              ? { ...item, quantity: item.quantity + quantity }
+            item.key === key
+              ? {
+                  ...item,
+                  product,
+                  quantity: clampQuantity(item.quantity + quantity, product.stock),
+                }
               : item,
           )
-        : [...current, { product, quantity }];
+        : [
+            ...current,
+            {
+              key,
+              product,
+              quantity: clampQuantity(quantity, product.stock),
+              memo: trimmedMemo,
+            },
+          ];
       writeCart(next);
     };
 
-    const remove = (productId: string) => {
-      writeCart(getSnapshot().filter((item) => item.product.id !== productId));
+    const remove = (key: string) => {
+      writeCart(getSnapshot().filter((item) => item.key !== key));
     };
 
-    const setQuantity = (productId: string, quantity: number) => {
+    const setQuantity = (key: string, quantity: number) => {
       if (quantity <= 0) {
-        remove(productId);
+        remove(key);
         return;
       }
       writeCart(
         getSnapshot().map((item) =>
-          item.product.id === productId ? { ...item, quantity } : item,
+          item.key === key
+            ? { ...item, quantity: clampQuantity(quantity, item.product.stock) }
+            : item,
         ),
       );
     };
 
     const clear = () => writeCart(EMPTY_CART);
     const count = items.reduce((sum, item) => sum + item.quantity, 0);
-    const total = items.reduce((sum, item) => {
-      return sum + item.product.price * item.quantity;
-    }, 0);
+    const subtotal = items.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
+    const shippingFee = shippingFeeFor(subtotal);
 
-    return { items, add, remove, setQuantity, clear, count, total };
-  }, [items]);
+    return {
+      items,
+      add,
+      remove,
+      setQuantity,
+      clear,
+      count,
+      subtotal,
+      shippingFee,
+      total: subtotal + shippingFee,
+      isOpen,
+      openCart: () => setOpen(true),
+      closeCart: () => setOpen(false),
+      setOpen,
+    };
+  }, [items, isOpen]);
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }

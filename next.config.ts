@@ -9,14 +9,18 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
-      ["basalt-coaster-set", "6f1c2a10-0000-4000-8000-000000000001"],
-      ["tinkercad-maker-kit", "6f1c2a10-0000-4000-8000-000000000002"],
-      ["local-wood-brooch", "6f1c2a10-0000-4000-8000-000000000003"],
-    ].map(([slug, id]) => ({
-      source: `/store/${slug}`,
-      destination: `/store/${id}`,
-      permanent: true,
-    }));
+      ...[
+        ["basalt-coaster-set", "6f1c2a10-0000-4000-8000-000000000001"],
+        ["tinkercad-maker-kit", "6f1c2a10-0000-4000-8000-000000000002"],
+        ["local-wood-brooch", "6f1c2a10-0000-4000-8000-000000000003"],
+      ].map(([slug, id]) => ({
+        source: `/store/${slug}`,
+        destination: `/store/${id}`,
+        permanent: true,
+      })),
+      { source: "/store/cart", destination: "/checkout", permanent: true },
+      { source: "/store/checkout", destination: "/checkout", permanent: true },
+    ];
   },
 };
 

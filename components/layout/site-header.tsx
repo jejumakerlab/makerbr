@@ -9,13 +9,14 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { SiteLogo } from "@/components/layout/site-logo";
 import { LogoutButton } from "@/components/auth/logout-button";
 import { useCart } from "@/components/store/cart-provider";
+import { CartDrawer } from "@/components/store/cart-drawer";
 import { cn } from "@/lib/utils";
 import { EMPTY_AUTH, type AuthState } from "@/lib/auth/types";
 
 export function SiteHeader({ auth = EMPTY_AUTH }: { auth?: AuthState }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
-  const { count } = useCart();
+  const { count, openCart } = useCart();
   const close = () => setOpen(false);
 
   return (
@@ -51,18 +52,20 @@ export function SiteHeader({ auth = EMPTY_AUTH }: { auth?: AuthState }) {
         </nav>
 
         <div className="flex items-center gap-1 sm:gap-2">
-          <Link
-            href="/store/cart"
+          <button
+            type="button"
+            onClick={openCart}
             className={cn(buttonVariants({ variant: "ghost", size: "icon-xl" }), "relative")}
-            aria-label={count > 0 ? `장바구니, ${count}개 상품` : "장바구니"}
+            aria-label={count > 0 ? `장바구니 열기, ${count}개 상품` : "장바구니 열기"}
+            aria-haspopup="dialog"
           >
             <ShoppingBag className="size-5" aria-hidden="true" />
             {count > 0 ? (
-              <span className="bg-highlight text-highlight-foreground absolute top-1.5 right-1.5 flex size-4 items-center justify-center rounded-full text-[10px] font-bold">
-                {count}
+              <span className="absolute top-1 right-1 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-[#0f4c3a] px-1 text-[10px] leading-none font-bold text-white ring-2 ring-white tabular-nums">
+                {count > 99 ? "99+" : count}
               </span>
             ) : null}
-          </Link>
+          </button>
 
           {auth.user ? (
             <div className="hidden items-center gap-1 sm:flex">
@@ -152,6 +155,7 @@ export function SiteHeader({ auth = EMPTY_AUTH }: { auth?: AuthState }) {
           </nav>
         </div>
       ) : null}
+      <CartDrawer />
     </header>
   );
 }
