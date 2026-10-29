@@ -8,7 +8,8 @@ export type FieldType =
   | "checkbox"
   | "datetime"
   | "date"
-  | "json";
+  | "json"
+  | "image";
 
 export type AdminField = {
   name: string;
@@ -25,6 +26,8 @@ export type AdminResourceConfig = {
   label: string;
   description: string;
   fields: AdminField[];
+  /** '일정 미정'을 고르면 함께 비워지는 일정 필드 */
+  scheduleFields?: string[];
 };
 
 export const ADMIN_RESOURCES: Record<AdminResourceName, AdminResourceConfig> = {
@@ -81,9 +84,10 @@ export const ADMIN_RESOURCES: Record<AdminResourceName, AdminResourceConfig> = {
       { name: "end_at", label: "종료", type: "datetime" },
       { name: "capacity", label: "정원", type: "number" },
       { name: "fee", label: "참가비(원)", type: "number" },
-      { name: "cover_image", label: "대표 이미지 URL", type: "text" },
+      { name: "cover_image", label: "대표 이미지", type: "image" },
       { name: "is_published", label: "공개", type: "checkbox" },
     ],
+    scheduleFields: ["start_at", "end_at"],
   },
   applications: {
     name: "applications",

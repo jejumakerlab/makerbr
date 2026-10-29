@@ -23,13 +23,13 @@ export function validateProductImage(file: File) {
   return null;
 }
 
-export async function uploadProductImage(file: File) {
+export async function uploadProductImage(file: File, folder = "products") {
   const supabase = createClient();
   if (!supabase) throw new Error("Supabase 설정이 없어 이미지를 올릴 수 없습니다.");
 
   // Storage 객체 키는 한글 등 비ASCII 문자를 허용하지 않으므로 원본 파일명은 쓰지 않습니다.
   const ext = file.type.split("/")[1]?.replace("jpeg", "jpg") ?? "img";
-  const path = `products/${new Date().getFullYear()}/${crypto.randomUUID()}.${ext}`;
+  const path = `${folder}/${new Date().getFullYear()}/${crypto.randomUUID()}.${ext}`;
 
   const { error } = await supabase.storage
     .from(PRODUCT_IMAGE_BUCKET)

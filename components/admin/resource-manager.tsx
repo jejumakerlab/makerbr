@@ -21,6 +21,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { ImageUrlField } from "@/components/admin/image-url-field";
 import type { AdminResourceConfig } from "@/lib/admin/resources";
 
 type Row = Record<string, unknown> & { id: string };
@@ -180,13 +181,25 @@ function ResourceForm({
   onSaved: () => void;
 }) {
   const [pending, setPending] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const scheduleFields = config.scheduleFields ?? [];
+  const [scheduleTbd, setScheduleTbd] = useState(
+    Boolean(initial) &&
+      scheduleFields.length > 0 &&
+      scheduleFields.every((name) => initial?.[name] == null),
+  );
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (uploading) return;
     const form = new FormData(event.currentTarget);
     const body: Record<string, unknown> = {};
 
     for (const field of config.fields) {
+      if (scheduleTbd && scheduleFields.includes(field.name)) {
+        body[field.name] = null;
+        continue;
+      }
       if (field.type === "checkbox") {
         body[field.name] = form.get(field.name) === "on";
         continue;
@@ -197,7 +210,14 @@ function ResourceForm({
         continue;
       }
       if (field.type === "number") body[field.name] = Number(raw);
-      else if (field.type === "json") {
+      else if (field.type === "datetime") {
+        const date = new Date(String(raw));
+        if (Number.isNaN(date.getTime())) {
+          toast.error(`${field.label} 날짜 형식이 올바르지 않습니다.`);
+          return;
+        }
+        body[field.name] = date.toISOString();
+      } else if (field.type === "json") {
         try {
           body[field.name] = JSON.parse(String(raw));
         } catch {
@@ -243,8 +263,23 @@ function ResourceForm({
         <div className="mt-5 grid max-h-[70vh] gap-4 overflow-y-auto pr-1">
           {config.fields.map((field) => {
             const value = initial ? initial[field.name] : field.defaultValue;
+            const isSchedule = scheduleFields.includes(field.name);
             return (
               <div key={field.name} className="grid gap-2">
+                {field.name === scheduleFields[0] ? (
+                  <label className="flex min-h-11 items-center gap-2 rounded-lg border bg-slate-50 px-3 text-sm font-medium">
+                    <input
+                      type="checkbox"
+                      checked={scheduleTbd}
+                      onChange={(event) => setScheduleTbd(event.target.checked)}
+                      className="size-4 accent-[var(--primary)]"
+                    />
+                    일정 미정
+                    <span className="text-muted-foreground font-normal">
+                      · 체크하면 시작·종료 일정을 비우고 &lsquo;일정 미정&rsquo;으로 표시합니다
+                    </span>
+                  </label>
+                ) : null}
                 <Label htmlFor={field.name}>
                   {field.label}
                   {field.required ? <span className="text-destructive"> *</span> : null}
@@ -284,6 +319,15 @@ function ResourceForm({
                     />
                     사용/공개
                   </label>
+                ) : field.type === "image" ? (
+                  <ImageUrlField
+                    id={field.name}
+                    name={field.name}
+                    required={field.required}
+                    defaultValue={typeof value === "string" ? value : ""}
+                    folder={config.name}
+                    onUploadingChange={setUploading}
+                  />
                 ) : (
                   <Input
                     id={field.name}
@@ -291,9 +335,10 @@ function ResourceForm({
                     type={field.type === "datetime" ? "datetime-local" : field.type}
                     step={field.type === "number" ? "any" : undefined}
                     inputMode={field.type === "number" ? "decimal" : undefined}
-                    required={field.required}
+                    required={field.required && !(isSchedule && scheduleTbd)}
+                    disabled={isSchedule && scheduleTbd}
                     defaultValue={toInputValue(value, field.type)}
-                    className="h-11"
+                    className="h-11 disabled:opacity-50"
                   />
                 )}
               </div>
@@ -304,8 +349,8 @@ function ResourceForm({
           <Button type="button" variant="outline" onClick={onClose}>
             취소
           </Button>
-          <Button type="submit" size="xl" disabled={pending}>
-            {pending ? "저장 중..." : "저장"}
+          <Button type="submit" size="xl" disabled={pending || uploading}>
+            {uploading ? "사진 올리는 중..." : pending ? "저장 중..." : "저장"}
           </Button>
         </div>
       </form>
@@ -316,7 +361,10 @@ function ResourceForm({
 function toInputValue(value: unknown, type: string) {
   if (value == null) return "";
   if (type === "datetime" && typeof value === "string") {
-    return value.slice(0, 16);
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return "";
+    // datetime-local 입력은 시간대 없이 현지 시각을 받으므로 UTC 값을 현지 시각으로 바꿔 넣습니다.
+    return new Date(date.getTime() - date.getTimezoneOffset() * 60_000).toISOString().slice(0, 16);
   }
   return String(value);
 }

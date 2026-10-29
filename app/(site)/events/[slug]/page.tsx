@@ -4,6 +4,7 @@ import Image from "next/image";
 import { getEventBySlug, getPublishedEventSlugs } from "@/lib/data/queries";
 import { EVENT_CATEGORIES } from "@/lib/constants";
 import { formatDateTime, formatKRW, remainingSeats } from "@/lib/format";
+import { needsUnoptimized } from "@/lib/images";
 import { Badge } from "@/components/ui/badge";
 import { EventApplyForm } from "@/components/events/event-apply-form";
 
@@ -33,6 +34,7 @@ export default async function EventDetailPage({ params }: Props) {
             src={event.cover_image}
             alt={`${event.title} 대표 이미지`}
             fill
+            unoptimized={needsUnoptimized(event.cover_image)}
             className="object-cover"
             sizes="768px"
             priority
