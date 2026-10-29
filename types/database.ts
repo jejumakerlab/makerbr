@@ -6,14 +6,9 @@ export type PostType = "notice" | "story" | "faq";
 export type ApplicationStatus = "pending" | "confirmed" | "cancelled" | "waitlist";
 export type QuoteStatus = "new" | "reviewing" | "quoted" | "closed";
 export type QuoteType = "product" | "education" | "custom";
-export type OrderStatus =
-  | "pending"
-  | "paid"
-  | "preparing"
-  | "shipped"
-  | "delivered"
-  | "cancelled"
-  | "refunded";
+export type OrderStatus = "입금대기" | "결제완료" | "제작/준비중" | "배송중" | "배송완료" | "취소";
+export type PaymentMethod = "무통장입금/계좌이체" | "기관 후불/세금계산서" | "카드결제(준비중)";
+export type DeliveryMethod = "택배" | "방문수령";
 
 export type Profile = {
   id: string;
@@ -155,17 +150,28 @@ export type Inquiry = {
 export type Order = {
   id: string;
   order_number: string;
-  customer_name: string;
-  customer_email: string;
-  customer_phone: string | null;
-  address_line1: string | null;
-  address_line2: string | null;
-  postal_code: string | null;
-  shipping_memo: string | null;
-  status: OrderStatus;
-  payment_id: string | null;
-  payment_method: string | null;
+  user_id: string | null;
+  buyer_name: string;
+  buyer_phone: string;
+  buyer_email: string;
+  delivery_method: DeliveryMethod;
+  recipient_name: string | null;
+  recipient_phone: string | null;
+  zipcode: string | null;
+  address: string | null;
+  address_detail: string | null;
+  delivery_memo: string | null;
+  payment_method: PaymentMethod;
+  /** 무통장 입금자명 */
+  depositor_name: string | null;
+  /** 기관 후불: 기관·담당자 연락처, 세금계산서 요청 메모 */
+  billing_memo: string | null;
+  items_total: number;
+  shipping_fee: number;
   total_amount: number;
+  status: OrderStatus;
+  tracking_carrier: string | null;
+  tracking_number: string | null;
   created_at: string;
   updated_at: string;
 };
@@ -175,9 +181,13 @@ export type OrderItem = {
   order_id: string;
   product_id: string | null;
   product_name: string;
-  unit_price: number;
+  thumbnail_url: string | null;
+  price: number;
   quantity: number;
+  custom_memo: string | null;
 };
+
+export type OrderWithItems = Order & { order_items: OrderItem[] };
 
 export type SiteSetting = {
   key: string;

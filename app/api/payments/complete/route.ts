@@ -1,33 +1,13 @@
 import { NextResponse } from "next/server";
-import { createAdminClient } from "@/lib/supabase/admin";
 
 /**
- * PortOne 결제 완료 웹훅/콜백.
- * 실제 검증은 PortOne Payment API로 paymentId를 조회한 뒤 주문을 paid로 갱신합니다.
+ * 카드 결제(토스페이먼츠 등) 완료 콜백 자리.
+ * 결제사 API로 결제 금액·상태를 검증하는 로직 없이 주문을 '결제완료'로 바꾸면
+ * 누구나 요청 한 번으로 주문을 결제 처리할 수 있으므로, 연동 전까지는 막아 둡니다.
  */
-export async function POST(request: Request) {
-  const body = await request.json().catch(() => null);
-  if (!body?.paymentId || !body?.orderId) {
-    return NextResponse.json({ error: "paymentId와 orderId가 필요합니다." }, { status: 400 });
-  }
-
-  const admin = createAdminClient();
-  if (!admin) {
-    return NextResponse.json({ received: true, demo: true });
-  }
-
-  const { error } = await admin
-    .from("orders")
-    .update({
-      status: "paid",
-      payment_id: body.paymentId,
-      payment_method: body.method ?? "PORTONE",
-    })
-    .eq("id", body.orderId);
-
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 400 });
-  }
-
-  return NextResponse.json({ ok: true });
+export async function POST() {
+  return NextResponse.json(
+    { error: "카드 결제는 준비 중입니다." },
+    { status: 501 },
+  );
 }

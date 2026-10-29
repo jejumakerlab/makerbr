@@ -241,21 +241,33 @@ create table if not exists public.inquiries (
   created_at timestamptz not null default now()
 );
 
+-- 주문 생성 함수(place_order)·취소 재고 복구·회원 본인 조회 정책은 orders.sql 에 있습니다.
 create table if not exists public.orders (
   id uuid primary key default gen_random_uuid(),
   order_number text not null unique,
-  customer_name text not null,
-  customer_email text not null,
-  customer_phone text,
-  address_line1 text,
-  address_line2 text,
-  postal_code text,
-  shipping_memo text,
-  status text not null default 'pending'
-    check (status in ('pending', 'paid', 'preparing', 'shipped', 'delivered', 'cancelled', 'refunded')),
-  payment_id text,
-  payment_method text,
+  user_id uuid references auth.users (id) on delete set null,
+  buyer_name text not null,
+  buyer_phone text not null,
+  buyer_email text not null,
+  delivery_method text not null default '택배'
+    check (delivery_method in ('택배', '방문수령')),
+  recipient_name text,
+  recipient_phone text,
+  zipcode text,
+  address text,
+  address_detail text,
+  delivery_memo text,
+  payment_method text not null
+    check (payment_method in ('무통장입금/계좌이체', '기관 후불/세금계산서', '카드결제(준비중)')),
+  depositor_name text,
+  billing_memo text,
+  items_total integer not null default 0 check (items_total >= 0),
+  shipping_fee integer not null default 0 check (shipping_fee >= 0),
   total_amount integer not null default 0 check (total_amount >= 0),
+  status text not null default '입금대기'
+    check (status in ('입금대기', '결제완료', '제작/준비중', '배송중', '배송완료', '취소')),
+  tracking_carrier text,
+  tracking_number text,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
@@ -265,8 +277,10 @@ create table if not exists public.order_items (
   order_id uuid not null references public.orders (id) on delete cascade,
   product_id uuid references public.products (id) on delete set null,
   product_name text not null,
-  unit_price integer not null,
-  quantity integer not null default 1 check (quantity > 0)
+  thumbnail_url text,
+  price integer not null check (price >= 0),
+  quantity integer not null check (quantity > 0),
+  custom_memo text
 );
 
 create table if not exists public.site_settings (
