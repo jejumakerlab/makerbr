@@ -289,6 +289,8 @@ function ResourceForm({
                     id={field.name}
                     name={field.name}
                     type={field.type === "datetime" ? "datetime-local" : field.type}
+                    step={field.type === "number" ? "any" : undefined}
+                    inputMode={field.type === "number" ? "decimal" : undefined}
                     required={field.required}
                     defaultValue={toInputValue(value, field.type)}
                     className="h-11"
