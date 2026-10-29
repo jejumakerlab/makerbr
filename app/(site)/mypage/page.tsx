@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { Package } from "lucide-react";
 import { LogoutButton } from "@/components/auth/logout-button";
 import { buttonVariants } from "@/components/ui/button";
 import { getAuthState } from "@/lib/auth/session";
@@ -50,9 +51,15 @@ export default async function MyPage() {
         </dl>
         <div className="mt-8 flex flex-wrap gap-3">
           {auth.isStaff ? (
-            <Link href="/admin" className={cn(buttonVariants({ size: "xl" }))}>
-              관리자 모드
-            </Link>
+            <>
+              <Link href="/admin/products" className={cn(buttonVariants({ variant: "cta", size: "xl" }))}>
+                <Package className="size-4" aria-hidden="true" />
+                상품 관리
+              </Link>
+              <Link href="/admin" className={cn(buttonVariants({ size: "xl" }))}>
+                관리자 모드
+              </Link>
+            </>
           ) : null}
           <LogoutButton className="border" />
         </div>

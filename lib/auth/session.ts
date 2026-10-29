@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
 import { isStaffRole } from "@/lib/auth/paths";
 import { EMPTY_AUTH, type AuthState, type AuthUser } from "@/lib/auth/types";
@@ -5,7 +6,7 @@ import type { UserRole } from "@/types/database";
 
 export type { AuthState, AuthUser };
 
-export async function getAuthState(): Promise<AuthState> {
+export const getAuthState = cache(async function getAuthState(): Promise<AuthState> {
   const supabase = await createClient();
   if (!supabase) return EMPTY_AUTH;
 
@@ -58,4 +59,4 @@ export async function getAuthState(): Promise<AuthState> {
     },
     isStaff: isStaffRole(profile.role),
   };
-}
+});

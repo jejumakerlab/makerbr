@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, Shield, ShoppingBag, X } from "lucide-react";
+import { Menu, Package, Shield, ShoppingBag, X } from "lucide-react";
 import { NAV_ITEMS } from "@/lib/constants";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { SiteLogo } from "@/components/layout/site-logo";
@@ -140,6 +140,16 @@ export function SiteHeader({ auth = EMPTY_AUTH }: { auth?: AuthState }) {
                 >
                   <Shield className="size-4" aria-hidden="true" />
                   관리자 모드
+                </Link>
+              ) : null}
+              {auth.isStaff ? (
+                <Link
+                  href="/admin/products"
+                  onClick={close}
+                  className={cn(buttonVariants({ variant: "outline", size: "xl" }), "justify-center")}
+                >
+                  <Package className="size-4" aria-hidden="true" />
+                  상품 관리
                 </Link>
               ) : null}
               {auth.user ? (

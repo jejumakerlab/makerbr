@@ -54,7 +54,9 @@ export default async function ProductDetailPage({ params }: Props) {
             </span>
           ) : null}
         </p>
-        <p className="text-muted-foreground mt-6 leading-8">{product.description}</p>
+        <p className="text-muted-foreground mt-6 leading-8 whitespace-pre-line">
+          {product.description}
+        </p>
         <p className="mt-4 text-sm">
           {product.stock > 0 ? `재고 ${product.stock}개` : "품절"}
         </p>
