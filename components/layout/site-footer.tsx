@@ -75,9 +75,7 @@ export function SiteFooter({
     <footer className="mt-auto bg-[#0f4c3a] text-white">
       <div className="mx-auto w-full max-w-6xl px-4 py-14 sm:px-6">
         <div className="flex flex-col gap-6 border-b border-white/10 pb-8 sm:flex-row sm:items-center sm:justify-between">
-          <div className="[&_span]:text-white [&_.text-slate-500]:text-emerald-100/70">
-            <SiteLogo />
-          </div>
+          <SiteLogo tone="dark" />
           <ul className="flex flex-wrap gap-2" aria-label="공식 채널">
             {SNS.map((item) => {
               const Icon = SNS_ICONS[item.id];

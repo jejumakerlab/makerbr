@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LayoutDashboard, LogOut } from "lucide-react";
@@ -8,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
+import logo from "@/images/logo_makerbr_512.png";
 
 export function AdminSidebar() {
   const pathname = usePathname();
@@ -22,11 +24,19 @@ export function AdminSidebar() {
 
   return (
     <aside className="bg-sidebar text-sidebar-foreground flex w-full flex-col lg:min-h-screen lg:w-64">
-      <div className="border-sidebar-border border-b px-5 py-5">
-        <p className="font-[family-name:var(--font-heading)] text-lg font-semibold">
-          {SITE.nameKo} 관리
-        </p>
-        <p className="text-sidebar-foreground/70 text-xs">통합 관리자 시스템</p>
+      <div className="border-sidebar-border flex items-center gap-3 border-b px-5 py-5">
+        <span
+          aria-hidden="true"
+          className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-white p-1 shadow-sm"
+        >
+          <Image src={logo} alt="" className="size-full object-contain" sizes="40px" />
+        </span>
+        <div>
+          <p className="font-[family-name:var(--font-heading)] text-lg font-semibold">
+            {SITE.nameKo} 관리
+          </p>
+          <p className="text-sidebar-foreground/70 text-xs">통합 관리자 시스템</p>
+        </div>
       </div>
       <nav className="flex flex-1 flex-col gap-1 p-3" aria-label="관리자 메뉴">
         {ADMIN_NAV.map((item) => {
