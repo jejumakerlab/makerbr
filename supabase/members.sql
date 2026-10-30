@@ -74,7 +74,8 @@ as $$
   );
 $$;
 
-grant execute on function public.is_profile_complete(uuid) to authenticated;
+-- 저장 직전 트리거에서만 쓰므로 외부(API)에서는 호출하지 못하게 둡니다.
+revoke execute on function public.is_profile_complete(uuid) from public, anon, authenticated;
 
 -- ---------------------------------------------------------------------------
 -- 4) 교육 신청 · 주문은 회원만
